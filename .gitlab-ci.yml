@@ -4,7 +4,6 @@ stages:
   - package
   - build images
   - deploy
-  - audit
 
 variables:
   MYSQL_ROOT_PASSWORD: testing
@@ -32,8 +31,6 @@ test server:
   coverage: '/total:\s+\(statements\)\s+\d+.\d+\%/'
   variables:
     TEST_DATABASE_URL: mysql://root:testing@localhost/authcore_test?parseTime=true
-  except:
-    - schedules
 
 test widgets:
   stage: test
@@ -51,12 +48,6 @@ test widgets:
     paths:
       - web/widgets/coverage
       - web/widgets/mochawesome-report
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-widgets
-    paths:
-      - web/widgets/node_modules/
-  except:
-    - schedules
 
 test web:
   stage: test
@@ -74,12 +65,28 @@ test web:
     paths:
       - web/coverage
       - web/mochawesome-report
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-web
-    paths:
-      - web/management/node_modules/
-  except:
-    - schedules
+
+audit widgets:
+  stage: test
+  image: node:lts
+  before_script:
+    - cd web/widgets
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn audit
+  allow_failure: true
+
+audit web:
+  stage: test
+  image: node:lts
+  before_script:
+    - cd web/management
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn audit
+  allow_failure: true
 
 # Build
 
@@ -91,8 +98,6 @@ build server:
   artifacts:
     paths:
       - build
-  except:
-    - schedules
   variables:
     GOPATH: ${CI_PROJECT_DIR}/go
 
@@ -108,12 +113,6 @@ build widgets:
   artifacts:
     paths:
       - web/dist/widgets
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-widgets
-    paths:
-      - web/widgets/node_modules/
-  except:
-    - schedules
 
 build web:
   stage: build
@@ -127,26 +126,18 @@ build web:
   artifacts:
     paths:
       - web/dist/web
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-web
-    paths:
-      - web/management/node_modules/
-  except:
-    - schedules
 
-build docs:
-  stage: build
-  image: node:lts
-  before_script:
-    - cd web/docs
-    - yarn install
-  script:
-    - yarn build
-  artifacts:
-    paths:
-      - web/dist/docs
-  except:
-    - schedules
+# build docs:
+#   stage: build
+#   image: node:lts
+#   before_script:
+#     - cd web/docs
+#     - yarn install
+#   script:
+#     - yarn build
+#   artifacts:
+#     paths:
+#       - web/dist/docs
 
 # Package
 
@@ -160,10 +151,9 @@ package:
       - dist
   only:
     - master
+    - develop
     - /^release-.*$/
     - tags
-  except:
-    - schedules
 
 # Build images
 
@@ -181,10 +171,9 @@ build images:
     - docker push "$AUTHCORE_IMAGE_TAG"
   only:
     - master
+    - develop
     - /^release-.*$/
     - tags
-  except:
-    - schedules
 
 # Deploy
 
@@ -205,130 +194,14 @@ release images:
     - /^release-.*$/
     - tags
 
-deploy staging:
-  stage: deploy
-  image: google/cloud-sdk
-  before_script:
-    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
-    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}" --tiller-namespace "${KUBE_NAMESPACE}"
-    - linux-amd64/helm dependency update deployments/charts/authcore
-  script:
-    - linux-amd64/helm upgrade --tiller-namespace="${KUBE_NAMESPACE}" --namespace="${KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic staging deployments/charts/authcore
-  dependencies: []
-  environment:
-    name: staging
-    url: https://authcore-staging.blocksq.com/
-  only:
-    - master
-  except:
-    - schedules
-
-# Daily deployment for Alpha and Likecoin instance
-
-deploy alpha:
-  stage: deploy
-  image: google/cloud-sdk
-  before_script:
-    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
-    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}"
-    - linux-amd64/helm dependency update deployments/charts/authcore
-  script:
-    - linux-amd64/helm upgrade --namespace="${DEPLOY_KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic authcore-alpha deployments/charts/authcore
-  dependencies: []
-  environment:
-    name: alpha
-    url: https://alpha.authcore.io/
-  variables:
-    DEPLOY_KUBE_NAMESPACE: authcore-alpha
-  only:
-    - schedules
-
-deploy like-co:
-  stage: deploy
-  image: google/cloud-sdk
-  before_script:
-    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
-    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}"
-    - linux-amd64/helm dependency update deployments/charts/authcore
-  script:
-    - linux-amd64/helm upgrade --namespace="${DEPLOY_KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic like-authcore deployments/charts/authcore
-  dependencies: []
-  environment:
-    name: like-co
-    url: https://likecoin-integration-test.authcore.io/
-  variables:
-    DEPLOY_KUBE_NAMESPACE: like-authcore
-  only:
-    - schedules
-
-pages:
-  stage: deploy
-  image: node:lts
-  script:
-    - scripts/docs.sh
-    - mv build/docs public
-  artifacts:
-    paths:
-      - public
-  only:
-    - master
-  except:
-    - schedules
-
-# End-to-end test
-
-# end-to-end test:
-#   stage: end-to-end test
-#   services:
-#     - docker:dind
-#   image: docker:latest
+# pages:
+#   stage: deploy
+#   image: node:lts
 #   script:
-#     - docker run --rm -e CYPRESS_AUTHCORE_WEB_HOST --network host -v `pwd`/test/end-to-end:/src -w /src cypress/base:10 bash -c "yarn install && yarn cypress run --spec \"cypress/integration/general/**/*\""
-#   variables:
-#     CYPRESS_AUTHCORE_WEB_HOST: https://authcore-staging.blocksq.com
+#     - scripts/docs.sh
+#     - mv build/docs public
 #   artifacts:
-#     when: always
 #     paths:
-#       - tests/end-to-end/cypress/screenshots
-#       - tests/end-to-end/cypress/videos
-#   dependencies: []
+#       - public
 #   only:
 #     - master
-#   except:
-#     - schedules
-
-# Audit
-
-audit widgets:
-  stage: audit
-  image: node:lts
-  before_script:
-    - cd widgets
-    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
-    - yarn install --network-concurrency 1
-  script:
-    - bash audit.sh
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-widgets
-    paths:
-      - web/widgets/node_modules/
-  allow_failure: true
-  only:
-    - schedules
-
-audit web:
-  stage: audit
-  image: node:lts
-  before_script:
-    - cd web
-    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
-    - yarn install
-  script:
-    - bash audit.sh
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-web
-    paths:
-      - web/management/node_modules/
-  allow_failure: true
-  only:
-    - schedules

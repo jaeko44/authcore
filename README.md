@@ -1,8 +1,8 @@
 # Authcore - Secure seamless access to everything.
 
-[![pipeline status](https://gitlab.com/blocksq/authcore/badges/master/pipeline.svg)](https://gitlab.com/blocksq/authcore/-/commits/master)
-[![coverage report](https://gitlab.com/blocksq/authcore/badges/master/coverage.svg)](https://gitlab.com/blocksq/authcore/-/commits/master)
-[![License](https://img.shields.io/badge/license-Apache%202-blue)](https://raw.githubusercontent.com/blocksq/authcore/master/LICENSE)
+[![pipeline status](https://gitlab.com/blocksq/authcore-mirror/badges/master/pipeline.svg)](https://gitlab.com/blocksq/authcore-mirror/-/commits/master)
+[![coverage report](https://gitlab.com/blocksq/authcore-mirror/badges/master/coverage.svg)](https://gitlab.com/blocksq/authcore-mirror/-/commits/master)
+[![License](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/authcore/authcore/blob/master/LICENSE)
 
 ![Logo](assets/logo.svg)
 

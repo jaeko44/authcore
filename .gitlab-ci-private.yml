@@ -1,0 +1,40 @@
+include:
+  local: .gitlab-ci.yml
+
+deploy staging:
+  stage: deploy
+  image: google/cloud-sdk
+  before_script:
+    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
+    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}" --tiller-namespace "${KUBE_NAMESPACE}"
+    - linux-amd64/helm dependency update deployments/charts/authcore
+  script:
+    - linux-amd64/helm upgrade --tiller-namespace="${KUBE_NAMESPACE}" --namespace="${KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic staging deployments/charts/authcore
+  dependencies: []
+  environment:
+    name: staging
+    url: https://authcore-staging.blocksq.com/
+  only:
+    - develop
+
+# End-to-end test
+
+# end-to-end test:
+#   stage: end-to-end test
+#   services:
+#     - docker:dind
+#   image: docker:latest
+#   script:
+#     - docker run --rm -e CYPRESS_AUTHCORE_WEB_HOST --network host -v `pwd`/test/end-to-end:/src -w /src cypress/base:10 bash -c "yarn install && yarn cypress run --spec \"cypress/integration/general/**/*\""
+#   variables:
+#     CYPRESS_AUTHCORE_WEB_HOST: https://authcore-staging.blocksq.com
+#   artifacts:
+#     when: always
+#     paths:
+#       - tests/end-to-end/cypress/screenshots
+#       - tests/end-to-end/cypress/videos
+#   dependencies: []
+#   only:
+#     - master
+#   except:
+#     - schedules
