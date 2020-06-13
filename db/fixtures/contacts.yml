@@ -1,0 +1,130 @@
+- id: 1
+  user_id: 1
+  type: 0
+  value: bob@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 2
+  user_id: 2
+  type: 0
+  value: carol@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 3
+  user_id: 3
+  type: 0
+  value: factor@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 4
+  user_id: 4
+  type: 0
+  value: twofactor@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 5
+  user_id: 1
+  type: 0
+  value: bob_the_second@example.com
+  is_primary: 0
+- id: 6
+  user_id: 1
+  type: 0
+  value: bob_the_third@example.com
+  is_primary: 0
+  verified_at: 2019-01-11 09:18:33
+- id: 7
+  user_id: 1
+  type: 1
+  value: "+85223456789"
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 8
+  user_id: 2
+  type: 1
+  value: "+85221111111"
+  is_primary: 1
+- id: 9
+  user_id: 3
+  type: 1
+  value: "+85233333333"
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 10
+  user_id: 4
+  type: 1
+  value: "+85233333334"
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 11
+  user_id: 5
+  type: 0
+  value: smith@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 12
+  user_id: 5
+  type: 1
+  value: "+85298765432"
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 13
+  user_id: 6
+  type: 0
+  value: benny@example.com
+  is_primary: 1
+  verified_at: 2019-01-11 09:18:33
+- id: 14
+  user_id: 7
+  type: 0
+  value: non-verified@example.com
+  is_primary: 1
+  verified_at: null
+- id: 15
+  user_id: 8
+  type: 0
+  value: non-verified-primary@example.com
+  is_primary: 0
+  verified_at: 2019-03-18 15:18:33
+- id: 16
+  user_id: 8
+  type: 0
+  value: verified-non-primary@example.com
+  is_primary: 1
+  verified_at: null
+- id: 17
+  user_id: 9
+  type: 1
+  value: "+85239999999"
+  is_primary: 1
+  verified_at: null
+- id: 18
+  user_id: 1
+  type: 0
+  value: carol@example.com
+  is_primary: 0
+  verified_at: 2019-01-11 09:18:33
+- id: 19
+  user_id: 1
+  type: 0
+  value: bob_the_forth@example.com
+  is_primary: 0
+  verified_at: 2019-01-11 09:18:33
+- id: 20
+  user_id: 2
+  type: 0
+  value: bob_the_forth@example.com
+  is_primary: 0
+  verified_at: 2019-01-11 09:18:33
+- id: 98
+  user_id: 98
+  type: 0
+  value: lastplusone@example.com
+  is_primary: 1
+  verified_at: 2019-03-18 15:18:33
+- id: 99
+  user_id: 99
+  type: 0
+  value: last@example.com
+  is_primary: 1
+  verified_at: 2019-03-18 15:18:33

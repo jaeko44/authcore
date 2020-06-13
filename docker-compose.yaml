@@ -1,0 +1,60 @@
+version: '3.4'
+services:
+  server:
+    tty: true
+    build:
+      context: .
+    working_dir: /src
+    command: ["reflex", "-c", "reflex.conf"]
+    environment:
+      AUTHCORE_CONFIG: configs/authcore_development.yaml
+      DATABASE_URL: mysql://root:development@db/authcore_development?parseTime=true
+      TEST_DATABASE_URL: mysql://root:development@db/authcore_test?parseTime=true
+    volumes:
+      - .:/src:cached
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 127.0.0.1:7000:7000 # gRPC port
+      - 127.0.0.1:8000:80 # HTTP port
+      - 127.0.0.1:8001:443 # HTTPS port
+  widgets:
+    image: node:lts
+    volumes:
+      - .:/src:cached
+    ports:
+      - 127.0.0.1:5000:5000
+      # - 127.0.0.1:8888:8888
+    command: ["yarn", "serve"]
+    working_dir: /src/web/widgets
+  web:
+    image: node:lts
+    volumes:
+      - .:/src:cached
+    ports:
+      - 127.0.0.1:5001:5001
+    command: ["yarn", "serve"]
+    working_dir: /src/web/management
+  db:
+    image: mysql:8.0
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: development
+  redis:
+    image: redis:latest
+    restart: always
+  ## Uncomment to run e2e test.
+  # cypress:
+  #   image: cypress/base:10
+  #   volumes:
+  #     - .:/src
+  #   working_dir: /src/test/end-to-end
+  #   command: ["tail", "-f", "/dev/null"]
+  #   environment:
+  #     CYPRESS_AUTHCORE_WEB_HOST: http://server:80
+  #   depends_on:
+  #     - server
+  #     - web
+  #     - widgets

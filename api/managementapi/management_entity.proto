@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package authcore.managementapi.v1;
+
+import "google/protobuf/timestamp.proto";
+
+import "authapi/authcore_entity.proto";
+
+option go_package = "authcore.io/authcore/pkg/api/managementapi";
+
+message Role {
+  int64 id = 1;
+  string name = 2;
+  bool system_role = 3;
+}
+
+message Permission {
+  string name = 1;
+}
+
+message OAuthFactor {
+  enum OAuthService {
+    FACEBOOK = 0;
+    GOOGLE = 1;
+    APPLE = 2;
+    MATTERS = 3;
+    TWITTER = 4;
+  }
+  OAuthService service = 1;
+  string oauth_user_id = 2;
+  string metadata = 3;
+}
+
+message Template {
+  string language = 1;
+  string name = 2;
+  oneof template {
+    EmailTemplate email_template = 3;
+    SMSTemplate sms_template = 4;
+  };
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message EmailTemplate {
+  string subject = 1;
+  string html_template = 2;
+  string text_template = 3;
+}
+
+message SMSTemplate {
+  string template = 1;
+};
+
+message TemplateLanguage {
+  string language = 1;
+}

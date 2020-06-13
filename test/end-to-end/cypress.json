@@ -1,0 +1,9 @@
+{
+  "env": {
+    "AUTHCORE_WEB_HOST": "https://authcore.dev:8001",
+    "test_account_contact": "test-{TIMESTAMP}@example.com",
+    "test_account_username_for_login": "e2e-testing-for-login",
+    "test_account_username_for_registration": "e2e-testing-",
+    "test_account_password": "1111222334"
+  }
+}

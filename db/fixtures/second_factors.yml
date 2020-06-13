@@ -1,0 +1,36 @@
+# SMS code for Smith
+- id: 1
+  user_id: 5
+  type: 0
+  content: {"phone_number": "+85298765432"}
+  last_used_at: "2019-06-13 00:00:00"
+# TOTP authenticator for Factor (Secret: THISISAWEAKTOTPSECRETFORTESTSXX2)
+- id: 2
+  user_id: 3
+  type: 1
+  content: {"encrypted_secret": "lsmNGXh2t0lu0TPriXZCFKJCIsShIseUCMxh742hTkFfVfrhiTIVErNwQMY2geWp1LTzKLmqYekvJQBpIhGmrwzgD566TTv8kzZ6lX3x73w7Tf3r1zDtAmCsbw9Xy9-gzw4NnDS8fHww-Q", "identifier": "Factor's jPhone"}
+  last_used_at: "2019-01-09 00:00:00"
+# TOTP authenticator for TwoFactor (Secret: THISISAWEAKTOTPSECRETFORTESTSXY2)
+- id: 3
+  user_id: 4
+  type: 1
+  content: {"encrypted_secret": "OWdti7xz8G2yG6a9HLjBw7_YabROm32X2NKkmMrpnfxrzqV0eb7vL0q6zJYoVvyzM0NRDt2L0xieFXZh-qGMZB5sZDma9ECso4XwCLvAiHPyMl6hQI2zg1p9z8nzsQOAL0tALplTsJZP6Q", "identifier": "TwoFactor's jPhone"}
+  last_used_at: "2019-01-09 00:00:00"
+# Another TOTP authenticator for TwoFactor (Secret: THISISAWEAKTOTPSECRETFORTESTSXY3)
+- id: 4
+  user_id: 4
+  type: 1
+  content: {"encrypted_secret": "ag2kKZl3oxQIrfhMrulSj2yIvfmTFMUwnhlOi2sldzxv_Wl-8jR1-sO-X0X90WpYmy4gMH7C1YcGj-oOMHbTiWzGjlLHyqImx79r7M4o6J3O-El1ioKfZlxYKoWBXpULh55yjaCkkq05JQ", "identifier": "TwoFactor's jPad"}
+  last_used_at: "2019-01-09 00:00:00"
+# SMS code for TwoFactor
+- id: 5
+  user_id: 4
+  type: 0
+  content: {"phone_number": "+85298765432"}
+  last_used_at: "2019-07-07 07:07:07"
+# Backup code for LastResort, while the first five codes has been used (Secret: THISISASECRETFORBACKUPCODETESTSX)
+- id: 6
+  user_id: 3
+  type: 2
+  content: {"encrypted_secret": "ZYdqXLT7ZmnfY-z3Oo26q7IpbpokNSKmwL_LhA68NLGczIBcQjJiPeb0ZPptjPH_JovOKVrZIsA5jFaMPOCSauEwSGzBqFRU32DdLMJWTvb8Z96-5OEY-JrI7ZvGWLz9AXHqXsyKh-Oy1Q", "used_code_mask": 31}
+  last_used_at: "2019-07-07 07:07:07"

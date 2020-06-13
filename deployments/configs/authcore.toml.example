@@ -1,0 +1,69 @@
+redis_address = "redis:6379"
+web_url = ""
+widgets_url = ""
+https_enabled =  "true"
+https_cert = "configs/server.crt"
+https_key = "configs/server.key"
+access_token_private_key = """
+"""
+service_account_id = "1"
+service_account_public_key = """
+"""
+# custom config files
+# include_configs = ["example1.toml", "example2.toml"]
+
+# Setup following parameters with your own secret values
+secret_key_base = "0000000000000000000000000000000000000000000000000000000000000000"
+
+# # Facebook settings
+# facebook_app_id = ""
+# facebook_app_secret = ""
+# facebook_oauth_redirect_url = ""
+# # Google settings
+# google_app_id = ""
+# google_app_secret = ""
+# google_oauth_redirect_url = ""
+# # Apple settings
+# apple_app_id = ""
+# apple_app_key_id = ""
+# apple_app_key_issuer = ""
+# apple_app_private_key = """
+# """
+# apple_oauth_redirect_url = ""
+# # Matters settings
+# matters_url = ""
+# matters_app_id = ""
+# matters_app_secret = ""
+# matters_oauth_redirect_url = ""
+# matters_id_token_certificate = """
+# """
+# # Twitter settings
+# twitter_consumer_key = ""
+# twitter_consumer_secret = ""
+# twitter_oauth_redirect_url = ""
+
+base_path = "/app"
+external_webhook_url = "http://127.0.0.1:8888/api/authcore_webhook"
+external_webhook_token = "this_is_a_secret_token"
+# Ask to have corresponding delegate for testing purpose
+email_delegate = ""
+sendgrid_api_key = ""
+aws_ses_region = ""
+aws_ses_access_key_id = ""
+aws_ses_secret_access_key = ""
+twilio_account_sid = ""
+twilio_service_sid = ""
+twilio_auth_token = ""
+# Widgets settings
+matters_unlink_disabled = "false"
+analytics_token = ""
+default_client_id = "management"
+base_url = "https://authcore.dev:8001/"
+
+# Should only be set if you need custom value
+# Once set, all value must be set from config (i.e. this file) and cannot be left empty
+# [applications.management]
+# name = "Management"
+# logo = ""
+# app_hosts = ["authcore.dev:8001"]
+# accept_oauth_uri_prefixes = ["https://authcore.dev:8001/web/"]

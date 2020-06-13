@@ -1,0 +1,5 @@
+# An replacement for en/VerificationSMS.txt
+- id: 1
+  name: VerificationSMS.txt
+  language: en
+  template: Your verification code is {code}

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "authcore.name" . }}-configuration
+  annotations:
+    app.kubernetes.io/name: {{ include "authcore.name" . }}-configuration
+    helm.sh/chart: {{ include "authcore.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-weight": "-10"
+data:
+  authcore.yaml: |-
+    include_configs: 
+      - "conf/secret"
+{{- if (include "authcore.redis.sentinel_enabled" $) }}
+    redis_sentinel_enabled: {{ include "authcore.redis.sentinel_enabled" $ }}
+{{- end }}
+{{- if eq (include "authcore.redis.sentinel_enabled" $) "true" }}
+    redis_sentinel_address:
+      {{ include "authcore.redis.sentinel_address" $ | indent 6 }}
+{{- else if (include "authcore.redis.redis_address" $) }}
+    redis_address: {{ include "authcore.redis.redis_address" $ | quote }}
+{{- end }}
+{{- if .Values.config }}
+{{ toYaml .Values.config | indent 4 }}
+{{- end }}

@@ -1,0 +1,223 @@
+// This file contains classes which can be modified by the primary/success/danger colour set by widget
+
+@import '~bootstrap-vue/src/override_variables';
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
+:root {
+    --primary-darken: #{darken($link-color, 15%)};
+    --danger-darken: #{darken($danger, 15%)};
+}
+
+@mixin monogram($circle-width) {
+    content: attr(data-letter);
+    display: inline-block;
+    font-size: $circle-width / 2;
+    width: $circle-width;
+    height: $circle-width;
+    line-height: $circle-width * 1.1;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--primary);
+    vertical-align: middle;
+    color: white;
+}
+
+.monogram[data-letter]:before {
+    @include monogram(3rem);
+}
+
+// Primary colour related
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+
+    &:hover {
+        background-color: var(--primary-darken);
+        border-color: var(--primary-darken);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.2rem var(--primary-half-transparent);
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: var(--primary-darken);
+        border-color: var(--primary-darken);
+    }
+
+    &:not(:disabled):not(.disabled):active:focus {
+        box-shadow: 0 0 0 0.2rem var(--primary-half-transparent);
+    }
+}
+
+.btn-link {
+    color: var(--primary);
+
+    &:hover {
+        color: var(--primary-darken);
+    }
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+
+    &:hover {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.2rem var(--primary-half-transparent);
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: var(--primary-darken);
+        border-color: var(--primary-darken);
+    }
+
+    &:not(:disabled):not(.disabled):active:focus {
+        box-shadow: 0 0 0 0.2rem var(--primary-half-transparent);
+    }
+}
+
+.bsq-form-field-focused {
+    border: 2px solid var(--primary);
+    .bsq-form-input {
+        color: var(--primary);
+    }
+}
+
+a {
+    color: var(--primary);
+
+    &:hover {
+        color: var(--primary-darken);
+    }
+}
+
+.custom-control-input {
+    &.is-invalid {
+        ~ .custom-control-label {
+            color: var(--danger);
+            &::before {
+                    border-color: var(--danger);
+            }
+        }
+        &:checked {
+            ~ .custom-control-label {
+                &::before {
+                    border-color: var(--danger);
+                    background-color: var(--danger);
+                }
+            }
+        }
+    }
+    &:checked {
+        ~ .custom-control-label {
+            &::before {
+                border-color: var(--primary);
+                background-color: var(--primary);
+            }
+        }
+    }
+}
+
+// Success colour related
+
+.text-success {
+    color: var(--success) !important;
+}
+
+.valid-feedback {
+    color: var(--success);
+}
+
+.bsq-form-field.is-valid .bsq-form-icon {
+    color: var(--success);
+}
+
+// Danger colour related
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    border-color: var(--danger);
+
+    &:hover {
+        background-color: var(--danger-darken);
+        border-color: var(--danger-darken);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.2rem var(--danger-half-transparent);
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: var(--danger-darken);
+        border-color: var(--danger-darken);
+    }
+
+    &:not(:disabled):not(.disabled):active:focus {
+        box-shadow: 0 0 0 0.2rem var(--danger-half-transparent);
+    }
+}
+
+.btn-outline-danger {
+    color: var(--danger);
+    border-color: var(--danger);
+
+    &:hover {
+        background-color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.2rem var(--danger-half-transparent);
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: var(--danger-darken);
+        border-color: var(--danger-darken);
+    }
+
+    &:not(:disabled):not(.disabled):active:focus {
+        box-shadow: 0 0 0 0.2rem var(--danger-half-transparent);
+    }
+}
+
+.invalid-feedback {
+    color: var(--danger);
+}
+
+.bsq-form-field.is-invalid {
+    border-color: var(--danger);
+}
+
+.bsq-form-field.is-invalid .bsq-form-input {
+    color: var(--danger);
+}
+
+.bsq-form-field.is-invalid .bsq-form-icon {
+    color: var(--danger);
+}
+
+.svg-stroke-primary {
+    stroke: var(--primary);
+}
+
+// Exception

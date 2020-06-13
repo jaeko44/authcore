@@ -1,0 +1,27 @@
+base_path: "/src"
+base_url: "https://authcore.dev:8001/"
+https_enabled:  "true"
+docs_enabled: "true"
+https_cert: "configs/server.crt"
+https_key: "configs/server.key"
+redis_address: "redis:6379"
+web_url: "http://web:5001"
+widgets_url: "http://widgets:5000"
+include_configs: ["configs/authcore_secrets.yaml"]
+service_accounts:
+  default:
+    public_key: |
+      -----BEGIN PUBLIC KEY-----
+      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHjQuqA41Mj/8B2PPb75XTeLKiacI
+      0LQohjjQHORfvx3FsOWvABVP8uEZGxUWflhasFeTa/wSSp264otaxOYwFQ==
+      -----END PUBLIC KEY-----
+    roles: ["authcore.editor"]
+    legacy_user_id: 1
+# Default secrets for development. They should be replaced in production config.
+secret_key_base: "855edf399835e9c9deb61877c1a76bf14eed7c35a167e10ff1b7d43db4363268"
+access_token_private_key: |
+  -----BEGIN EC PRIVATE KEY-----
+  MHcCAQEEICLBfuNNrqDL6LDLeaQFaytAGDP7hk65Q4J2c8iBumlqoAoGCCqGSM49
+  AwEHoUQDQgAEKY6MShC7UrSkekyczKKvZQXuxFKDRd0DEgV6r9XeDAZoYPPTvgx3
+  oNBTatFJjSOJ/qRrBbqvbZDiPOLpJ7vlaQ==
+  -----END EC PRIVATE KEY-----

@@ -1,0 +1,5 @@
+apiVersion: v1
+appVersion: "0.3.5"
+description: Authcore is a secure authentication and authorization system for web, mobile and enterprise applications.
+name: authcore
+version: 0.3

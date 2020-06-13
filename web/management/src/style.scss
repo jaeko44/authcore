@@ -1,0 +1,280 @@
+@mixin monogram($circle-width) {
+    content: attr(data-letter);
+    display: inline-block;
+    font-size: $circle-width / 2.5;
+    width: $circle-width;
+    height: $circle-width;
+    line-height: $circle-width * 1.05;
+    text-align: center;
+    border-radius: 50%;
+    background: $bsq-blue;
+    vertical-align: middle;
+    color: white;
+}
+
+@import '~placeholder-loading/src/scss/placeholder-loading';
+
+// Override for original setting in bootstrap
+ul.dropdown-menu {
+    padding-top: 0;
+    padding-bottom: 0;
+    border: 0;
+    &.show {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+    li {
+        border-top: $general-border-size solid $bsq-grey-medium;
+        a, button {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+    }
+    li:first-child {
+        border-top: 0;
+        a, button {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+    }
+    li:last-child {
+        a, button {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+    }
+}
+
+// Provide active class in router-link-active class, match with vue-router
+.dropdown-item {
+    &.router-link-active {
+        color: $dropdown-link-active-color;
+        text-decoration: none;
+        @include gradient-bg($dropdown-link-active-bg);
+    }
+}
+
+.border-theme-general {
+    border: $general-border-size solid $bsq-grey-medium;
+    border-radius: $general-border-radius;
+}
+
+// Provide font size class for different font size need
+// Comment shows corrsponding size when 1rem = 16px
+$font-size-breakpoints: (
+    '0\\.75rem': 0.75rem,   // 12px
+    '0\\.875rem': 0.875rem, // 14px
+    "1\\.375rem": 1.375rem  // 22px
+);
+
+.form-group {
+    label {
+        margin-bottom: 0.875rem;
+    }
+}
+
+$element-states: 'hover', 'focus';
+
+@each $name, $size in $font-size-breakpoints {
+    .font\:#{$name} {
+        font-size: #{$size};
+    }
+}
+
+.alert-dismissible {
+    &.text-center {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .close {
+        font-weight: 400;
+        padding: 0.6rem 1.25rem;
+    }
+}
+
+.font-weight\:semi-bold {
+  font-weight: 600;
+}
+
+.text-grey {
+  color: $bsq-text-grey;
+}
+
+.text-hover-grey {
+    &:hover {
+        color: $bsq-text-grey;
+    }
+}
+
+.background-grey {
+    background-color: $bsq-grey-light;
+}
+
+.rotateX-180 {
+    transform: rotate(180deg);
+}
+
+@each $state in $element-states {
+    .border-#{$state}-0 {
+        &:#{$state} {
+            border-color: transparent;
+            box-shadow: none;
+        }
+    }
+}
+
+.ac-left-arrow-grey-dark {
+  color: $bsq-grey-dark;
+}
+
+.ph-item::before {
+    background: linear-gradient(to right, rgba($ph-bg, .6) 46%, rgba($ph-bg, .35) 50%, rgba($ph-bg, .6) 54%) 50% 50%;
+}
+
+.ph-item {
+    border: 0;
+    height: 100%;
+    display: block;
+    > * {
+        flex-flow: row;
+    }
+}
+
+.ph-row {
+    justify-content: center
+}
+
+.ph-custom-avatar:before {
+    content: "";
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: $ph-color;
+}
+
+.navbar-brand {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.header-brand-logo {
+    width: initial;
+    height: 25px;
+}
+
+.scroll-row {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow-y: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.navigation-monogram[data-letter]:before {
+    @include monogram(2.5rem);
+}
+
+.details-monogram[data-letter]:before {
+    @include monogram(3rem);
+}
+
+.monogram-alignment {
+    padding-left: 30px;
+    margin-left: 3rem;
+}
+
+.badge-custom {
+    background-color: $bsq-blue-300;
+    font-weight: initial;
+    font-size: 90%;
+    padding: 0.4rem 0.8rem;
+    border-radius: $table-theme-full-border-size;
+}
+
+.btn-general {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+.w-22 {
+    width: 22% !important;
+}
+
+.p\:2\.5rem {
+    padding: 2.5rem !important;
+}
+
+.pl\:2\.5rem {
+    padding-left: 2.5rem !important;
+}
+
+.pr\:2\.5rem {
+    padding-right: 2.5rem !important;
+}
+
+.multiselect__option--selected {
+    &.multiselect__option--highlight {
+        background: $danger;
+        &::after {
+            background: $danger;
+        }
+    }
+}
+.multiselect__option--highlight {
+    background: $bsq-blue-400;
+    &::after {
+        background: $bsq-blue-400;
+    }
+}
+
+// Override default invalid-feedback font size
+.invalid-feedback {
+    font-size: 100%
+}
+
+// Override the down arrow icon to be grey by default
+.ac-down-arrow:before {
+    color: $bsq-grey-medium;
+}
+
+.generic-list-item {
+    border-top: 1px solid $bsq-grey-light;
+    border-left: 1px solid $bsq-grey-light;
+    border-right: 1px solid $bsq-grey-light;
+    // Padding from grid gutter width to match the alignment of design
+    padding-left: $grid-gutter-width / 2;
+    padding-right: $grid-gutter-width / 2;
+
+    &:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    &:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: 1px solid $bsq-grey-light;
+    }
+
+    .hover-remove {
+        @media only screen and (min-width: 421px) {
+            visibility: hidden;
+        }
+    }
+
+    &:hover {
+        border-bottom: 1px solid $bsq-grey-light;
+        .hover-remove {
+            visibility: visible;
+        }
+    }
+}
+
+.CodeMirror {
+    height: auto;
+}

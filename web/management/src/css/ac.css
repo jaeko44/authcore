@@ -1,0 +1,59 @@
+@font-face {
+    font-family: 'ac';
+    src: url('./font/ac.eot');
+    src: url('./font/ac.eot#iefix') format('embedded-opentype'),
+         url('./font/ac.woff2') format('woff2'),
+         url('./font/ac.woff') format('woff'),
+         url('./font/ac.ttf') format('truetype'),
+         url('./font/ac.svg#ac') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'ac-general';
+    src: url('../font/ac-general.svg?30039591#ac-general') format('svg');
+  }
+}
+*/
+
+[class^="ac-"]:before, [class*=" ac-"]:before {
+    font-family: "ac";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+
+    display: inline-block;
+    text-decoration: inherit;
+    text-align: center;
+
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+
+    /* fix buttons height, for twitter bootstrap */
+    /* line-height: 1rem; */
+
+    /* Font smoothing. That was taken from TWBS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ac-help-circled:before { content: '\e800'; } /* '' */
+.ac-minus-circle:before { content: '\e801'; } /* '' */
+.ac-left-arrow:before { content: '\e802'; } /* '' */
+.ac-chevron-right:before { content: '\e803'; } /* '' */
+.ac-computer:before { content: '\e804'; } /* '' */
+.ac-phone:before { content: '\e805'; } /* '' */
+.ac-pad:before { content: '\e806'; } /* '' */
+.ac-shield-tick:before { content: '\e807'; } /* '' */
+.ac-logo:before { content: '\e808'; } /* '' */
+.ac-view:before { content: '\e809'; } /* '' */
+.ac-hide:before { content: '\e80a'; } /* '' */
+.ac-down-arrow:before { content: '\e80b'; } /* '' */
+.ac-twitter:before { content: '\f099'; } /* '' */
+.ac-facebook:before { content: '\f09a'; } /* '' */
+.ac-apple:before { content: '\f179'; } /* '' */

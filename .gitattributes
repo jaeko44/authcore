@@ -1,0 +1,4 @@
+*.pb.go binary
+*.pb.gw.go binary
+*.swagger.json binary
+*.svg binary

@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "authcore.fullname" . }}-apiserver
+  labels:
+    app.kubernetes.io/name: {{ include "authcore.name" . }}-apiserver
+    helm.sh/chart: {{ include "authcore.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "authcore.name" . }}
+    app.kubernetes.io/component: apiserver
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "authcore.name" . }}-apiserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "authcore.name" . }}-apiserver
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-apiserver
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AUTHCORE_CONFIG
+              value: conf/authcore
+{{- if (include "authcore.redis.passwordSecret" .) }}
+            - name: AUTHCORE_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "authcore.redis.passwordSecret" . }}
+                  key: redis-password
+{{- end }}
+{{- if (include "authcore.mysql.databaseURL" .) }}
+            - name: AUTHCORE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "authcore.mysql.databaseURL" . }}
+                  key: database_url
+{{- end }}
+          args: ["--skipcheck"]
+          ports:
+            - name: grpc
+              containerPort: 7000
+              protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            {{- toYaml .Values.resources.apiserver | nindent 12 }}
+          volumeMounts:
+            - mountPath: /app/conf/
+              name: config
+      volumes:
+      - name: config
+        projected:
+          sources:
+            - configMap:
+                name: {{ include "authcore.name" . }}-configuration
+                items:
+                  - key: authcore.yaml
+                    path: authcore.yaml
+            - secret:
+                name: {{ include "authcore.name" . }}-secret
+                items:
+                  - key: secret.yaml
+                    path: secret.yaml
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

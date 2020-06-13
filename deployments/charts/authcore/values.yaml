@@ -1,0 +1,169 @@
+# Default values for authcore.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: gcr.io/enyk-releng/authcore
+  tag: "v0.3.1"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+tags:
+  install_redis: true
+
+service:
+  api:
+    type: ClusterIP
+    port: 80
+  grpc:
+    port: 7000
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - chart-example.local
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+  # name for nginx ingress proxy_cache. if empty cache will not be enabled
+  # it is needed for asset caching during upgrade to provide zero asset downtime
+  proxy_cache: ""
+
+resources:
+  apiserver: {}
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Optionally specify an array of imagePullSecrets.
+# Secrets must be manually created in the namespace.
+# ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+# imagePullSecrets:
+#   - name: myRegistryKeySecretName
+
+
+redis:
+  redis_sentinel_enabled: false
+  redis_sentinel_addresses: {}
+  #   - "redis:26379"
+  redis_address: ""
+  # Enter name of redis secret if it is not installed via dependency
+  passwordSecret: ""
+
+mysql:
+  # Enter name of mysql database url secret created via instruction in README
+  database_url: ""
+
+config:
+  # set the base URL for your app here
+  # e.g. https://example.com/
+  base_url: "https://<YOUR DOMAIN>/"
+
+  # email providers
+  email_delegate: "sendgrid"         # "ses" or "sendgrid"
+  # ses
+  # aws_ses_region: "us-west-2"
+
+  # identity providers
+  # idp_list: []
+  # facebook_oauth_redirect_url: "https://example.authcore.io/external-oauth/facebook/cb"
+  # google_oauth_redirect_url: "https://example.authcore.io/external-oauth/google/cb"
+  # apple_app_id: "XXXXXXXXXXX"
+  # apple_oauth_redirect_url: "https://example.authcore.io/external-oauth/apple/cb"
+  # matters_url: "https://server-stage.matters.news"
+  # matters_oauth_redirect_url: "https://example.authcore.io/external-oauth/matters/cb"
+  # matters_id_token_certificate: |-
+  #   -----BEGIN PUBLIC KEY-----
+  #   -----END PUBLIC KEY----
+  # matters_unlink_disabled: true
+  # twitter_oauth_redirect_url: "https://example.authcore.io/external-oauth/twitter/cb"
+
+  # service account
+  # service_account_public_key: |-
+  #   -----BEGIN PUBLIC KEY-----
+  #   -----END PUBLIC KEY----
+  # service_account_id: 37
+
+  # emails
+  # reset_password_authentication_email_sender_name: "Test Application"
+  # reset_password_authentication_email_sender_address: "noreply@example.com"
+  # reset_password_redirect_link: "https://example.com"
+  # verification_email_sender_name: "Test Application"
+  # verification_email_sender_address: "noreply@example.com"
+
+  # webhook
+  #external_webhook_url: "https://example.com/users/hook/authcore"
+  
+  # secretd
+  # secretd_address: "10.140.0.2:9000"
+  # secretd_cluster_identity: "XXXXXXX"
+  
+  applications: {}
+  # applications:
+    # for customizing management admin portal config
+    # management:
+    #   app_domains:
+    #     - "localhost:3000"
+    #   allowed_callback_urls:
+    #     - "http://localhost:3000/"
+    #   application_name: "Management"
+    #   application_logo: "https://example.com/logo.png"
+  
+    # Add other client here
+    # example:
+    #   app_domains:
+    #     - "localhost:3000"
+    #   allowed_callback_urls:
+    #     - "http://localhost:3000/"
+    #   application_name: "Test Application"
+    #   application_logo: "https://example.com/logo.png"
+
+secret:
+  # email providers
+  # sendgrid
+  sendgrid_api_key: "YOUR_SENDGRID_API_KEY"
+  # ses
+  # aws_ses_access_key_id: "XXXXXXXXXXXXXX"
+  # aws_ses_secret_access_key: "XXXXXXXXXXX"
+  
+  # identity providers
+  # facebook
+  # facebook_app_id: "XXXXXXXXXXX"
+  # facebook_app_secret: "XXXXXXXXXXX"
+  # google
+  # google_app_id: "XXXXXXXXXXX"
+  # google_app_secret: "XXXXXXXXXXX"
+  # apple
+  # apple_app_key_id: "XXXXXXXX"
+  # apple_app_key_issuer: "XXXXXXX"
+  # apple_app_private_key: |-
+  #   -----BEGIN EC PRIVATE KEY-----
+  #   -----END EC PRIVATE KEY----
+  # matters
+  # matters_app_id: "XXXXXXX"
+  # matters_app_secret: "XXXXXXXX"
+  # twitter
+  # twitter_consumer_key: "XXXXXXXXXX"
+  # twitter_consumer_secret: "XXXXXXXXXXXXXX"
+
+  # secretd
+  # secretd_client_private_key: "XXXXXXXX"
+
+  # webhook
+  # external_webhook_token: "XXXXXXXXXXXXXX"

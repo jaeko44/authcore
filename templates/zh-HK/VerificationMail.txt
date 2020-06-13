@@ -1,0 +1,7 @@
+{display_name} 你好，
+
+請輸入以下的認證碼以確認您的電郵地址：{code}
+
+由 Authcore 提供
+
+&copy; 2020 {application_name}，版權所有

@@ -1,0 +1,6 @@
+dependencies:
+- name: redis
+  version: 10.5.1
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  tags:
+    - install_redis

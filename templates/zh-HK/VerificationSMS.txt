@@ -1,0 +1,1 @@
+{display_name}: 你在 {application_name} 的認證碼是 {code}。

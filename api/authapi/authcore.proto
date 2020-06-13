@@ -1,0 +1,1175 @@
+
+syntax = "proto3";
+
+package authcore.authapi.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+import "authapi/authcore_entity.proto";
+
+option go_package = "authcore.io/authcore/pkg/api/authapi";
+
+service AuthService {
+
+  // Registers a new device.
+  rpc CreateDeviceRegistration (CreateDeviceRegistrationRequest) returns (DeviceRegistration) {
+    option (google.api.http) = {
+      post: "/device"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Register device";
+      description: "Registers a new device.";
+    };
+  }
+
+  // Creates a new user.
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/users"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create user";
+      description: "Creates a new user.";
+    };
+  }
+
+  // Creates a new access token that can be used to access the authenticated APIs.
+  rpc CreateAccessToken (CreateAccessTokenRequest) returns (AccessToken) {
+    option (google.api.http) = {
+      post: "/tokens"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create access token";
+      description: "Creates a new access token that can be used to access the authenticated APIs.";
+    };
+  }
+
+  // Creates machine-to-machine token. This method will be replaced by service account API in the future.
+  rpc CreateMachineToken (CreateMachineTokenRequest) returns (CreateMachineTokenResponse) {
+    option (google.api.http) = {
+      post: "/machine_tokens"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create machine token";
+      description: "Creates machine-to-machine token. This method will be replaced by service account API in the future.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Gets the profile of the current user.
+  rpc GetCurrentUser (google.protobuf.Empty) returns (User) {
+    option (google.api.http) = {
+      get: "/users/current"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Get current user";
+      description: "Gets the profile of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates the profile of the current user.
+  rpc UpdateCurrentUser (UpdateCurrentUserRequest) returns (User) {
+    option (google.api.http) = {
+      put: "/users/current"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update current user";
+      description: "Updates the profile of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Create a new authentication flow by requesting password parameters.
+  rpc StartPasswordAuthn (StartPasswordAuthnRequest) returns (AuthenticationState) {
+    option (google.api.http) = {
+      post: "/authn/password/start"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start password authentication.";
+      description: "Create a new authentication flow by requesting password parameters."
+    };
+  }
+
+  // Authenticate by starting SPAKE2+ key exchange.
+  rpc PasswordAuthnKeyExchange (PasswordAuthnKeyExchangeRequest) returns (AuthenticationState) {
+    option (google.api.http) = {
+      post: "/authn/password/key_exchange"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Authenticate password";
+      description: "Creates a new authentication flow by requesting a password challenge.";
+    };
+  }
+
+  // Authenticates a user by a first factor.
+  rpc FinishPasswordAuthn (FinishPasswordAuthnRequest) returns (AuthenticationState) {
+    option (google.api.http) = {
+      post: "/authn/password/finish"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Finish password authentication";
+      description: "Finish password authentication by confirming SPAKE2+ confirmation.";
+    };
+  }
+
+  // Requests a challenge for the second-factor authentication.
+  rpc StartAuthenticateSecondFactor (StartAuthenticateSecondFactorRequest) returns (StartAuthenticateSecondFactorResponse) {
+    option (google.api.http) = {
+      post: "/auth/second/start"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start second factor authentication";
+      description: "Requests a challenge for the second-factor authentication.";
+    };
+  }
+
+
+  // Authenticates a user by a second factor.
+  rpc AuthenticateSecondFactor (AuthenticateSecondFactorRequest) returns (AuthenticationState) {
+    option (google.api.http) = {
+      post: "/auth/second"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Authenticate second factor";
+      description: "Authenticates a user by a second factor.";
+    };
+  }
+
+  // Creates a new authentication flow by requesting an email (or SMS) for reset password.
+  rpc StartResetPasswordAuthentication (StartResetPasswordAuthenticationRequest) returns (ResetPasswordAuthenticationState) {
+    option (google.api.http) = {
+      post: "/auth/reset_password"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start reset password authentication";
+      description: "Creates a new authentication flow by requesting an email (or SMS) for reset password.";
+    };
+  }
+
+  // Authenticates a user by a first factor for reset password.
+  rpc AuthenticateResetPassword (AuthenticateResetPasswordRequest) returns (ResetPasswordAuthenticationState) {
+    option (google.api.http) = {
+      post: "/auth/reset_password/first"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Authenticate reset password";
+      description: "Authenticates a user by a first factor for reset password.";
+    };
+  }
+
+  // Authenticates a user by a second factor for reset password.
+  rpc AuthenticateResetPasswordSecondFactor (AuthenticateResetPasswordSecondFactorRequest) returns (ResetPasswordAuthenticationState) {
+    option (google.api.http) = {
+      post: "/auth/reset_password/second"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Authenticate reset password second factor";
+      description: "Authenticates a user by a second factor for reset password.";
+    };
+  }
+
+  // Creates a new authentication flow by requesting a new OAuth state.
+  rpc StartAuthenticateOAuth (StartAuthenticateOAuthRequest) returns (StartAuthenticateOAuthResponse) {
+    option (google.api.http) = {
+      get: "/auth/oauth"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start authentication with OAuth";
+      description: "Creates a new authentication flow by requesting a new OAuth state.";
+    };
+  }
+
+  // Authenticates a user by an OAuth factor.
+  rpc AuthenticateOAuth (AuthenticateOAuthRequest) returns (AuthenticateOAuthResponse) {
+    option (google.api.http) = {
+      post: "/auth/first/oauth"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Authenticate with OAuth";
+      description: "Authenticates a user by an OAuth factor.";
+    };
+  }
+
+  // Initiates the process to create external OAuth authentication as the first factor.
+  rpc StartCreateOAuthFactor (StartCreateOAuthFactorRequest) returns (StartCreateOAuthFactorResponse) {
+    option (google.api.http) = {
+      get: "/oauth_factors/start"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start create OAuth factor";
+      description: "Initiates the process to create external OAuth authentication as the first factor.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates an OAuth factor of the current user by the response from OAuth.
+  rpc CreateOAuthFactor (CreateOAuthFactorRequest) returns (CreateOAuthFactorResponse) {
+    option (google.api.http) = {
+      post: "/oauth_factors"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create OAuth factor";
+      description: "Creates an OAuth factor of the current user by the response from OAuth.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates an OAuth factor of the current user by an encrypted access token.
+  rpc CreateOAuthFactorByAccessToken (CreateOAuthFactorByAccessTokenRequest) returns (CreateOAuthFactorByAccessTokenResponse) {
+    option (google.api.http) = {
+      post: "/oauth_factors/access_token"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create OAuth factor by access token";
+      description: "Creates an OAuth factor of the current user by an encrypted access token.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the owned OAuth factors.
+  rpc ListOAuthFactors (ListOAuthFactorsRequest) returns (ListOAuthFactorsResponse) {
+    option (google.api.http) = {
+      get: "/oauth_factors"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List OAuth factors";
+      description: "Lists the owned OAuth factors.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes an owned OAuth factor.
+  rpc DeleteOAuthFactor (DeleteOAuthFactorRequest) returns (DeleteOAuthFactorResponse) {
+    option (google.api.http) = {
+      delete: "/oauth_factors/{id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete OAuth factor";
+      description: "Deletes an owned OAuth factor.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Initiates the process of creating second factor.
+  rpc StartCreateSecondFactor (StartCreateSecondFactorRequest) returns (StartCreateSecondFactorResponse) {
+    option (google.api.http) = {
+      post: "/second_factors/start"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start create second factor";
+      description: "Initiates the process of creating second factor.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates a second factor of the current user.
+  rpc CreateSecondFactor (CreateSecondFactorRequest) returns (SecondFactor) {
+    option (google.api.http) = {
+      post: "/second_factors"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create second factor";
+      description: "Creates a second factor of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the owned second factors.
+  rpc ListSecondFactors (ListSecondFactorsRequest) returns (ListSecondFactorsResponse) {
+    option (google.api.http) = {
+      get: "/second_factors"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List second factors";
+      description: "Lists the owned second factors.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes an owned second factor.
+  rpc DeleteSecondFactor (DeleteSecondFactorRequest) returns (DeleteSecondFactorResponse) {
+    option (google.api.http) = {
+      delete: "/second_factors/{id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete second factor";
+      description: "Deletes an owned second factor.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates a new contact for the current user.
+  rpc CreateContact (CreateContactRequest) returns (Contact) {
+    option (google.api.http) = {
+      post: "/contacts"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create contact";
+      description: "Creates a new contact for the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates the primary contact for the current user.
+  rpc UpdatePrimaryContact (UpdatePrimaryContactRequest) returns (Contact) {
+    option (google.api.http) = {
+      put: "/contacts/{contact_id}/primary"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update primary contact";
+      description: "Updates the primary contact for the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the owned contacts.
+  rpc ListContacts (ListContactsRequest) returns (ListContactsResponse) {
+    option (google.api.http) = {
+      get: "/contacts"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List contacts";
+      description: "Lists the owned contacts.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes an owned contact.
+  rpc DeleteContact (DeleteContactRequest) returns (DeleteContactResponse) {
+    option (google.api.http) = {
+      delete: "/contacts/{contact_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete contact";
+      description: "Deletes an owned contact.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Starts the contact verification flow.
+  rpc StartVerifyContact (StartVerifyContactRequest) returns (StartVerifyContactResponse) {
+    option (google.api.http) = {
+      post: "/contacts/verify"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start verify contact";
+      description: "Starts the contact verification flow.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Completes a contact verification with verification code for the current user.
+  rpc CompleteVerifyContact (CompleteVerifyContactRequest) returns (CompleteVerifyContactResponse) {
+    option (google.api.http) = {
+      put: "/contacts/verify"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Verify contact";
+      description: "Completes a contact verification with verification code for the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+    // Starts the contact verification flow.
+    rpc StartVerifyPrimaryContact (StartVerifyPrimaryContactRequest) returns (StartVerifyPrimaryContactResponse) {
+      option (google.api.http) = {
+        post: "/contacts/primary/verify"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+        summary: "Start verify primary contact";
+        description: "Starts the contact verification flow for primary contact.";
+        security: {
+          security_requirement: {
+            key: "BearerAuth";
+            value: {}
+          }
+        }
+      };
+    }
+
+    // Completes a contact verification with verification code for the current user.
+    rpc CompleteVerifyPrimaryContact (CompleteVerifyPrimaryContactRequest) returns (CompleteVerifyPrimaryContactResponse) {
+      option (google.api.http) = {
+        put: "/contacts/primary/verify"
+        body: "*"
+      };
+      option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+        summary: "Verify primary contact";
+        description: "Completes a contact verification with verification code for the current user.";
+        security: {
+          security_requirement: {
+            key: "BearerAuth";
+            value: {}
+          }
+        }
+      };
+    }
+
+  // Create a change password flow for current user by requesting password parameters.
+  rpc StartChangePassword (StartChangePasswordRequest) returns (StartChangePasswordResponse) {
+    option (google.api.http) = {
+      get: "/users/current/password/start"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start Change Password";
+      description: "Create a change password flow for current user by requesting password parameters.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Continue the change password flow by complete key exchange and creates a challenge for SPAKE2+ for the current user.
+  rpc ChangePasswordKeyExchange (ChangePasswordKeyExchangeRequest) returns (PasswordChallenge) {
+    option (google.api.http) = {
+      post: "/users/current/password/key_exchange"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create password challenge";
+      description: "Creates a challenge for SPAKE2+ for the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  };
+
+  // Changes the password for the current user.
+  rpc FinishChangePassword (FinishChangePasswordRequest) returns (FinishChangePasswordResponse) {
+    option (google.api.http) = {
+      post: "/users/current/password/finish"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Change password";
+      description: "Changes the password for the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Resets the password.
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse) {
+    option (google.api.http) = {
+      post: "/users/reset_password"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Reset password";
+      description: "Resets the password.";
+    };
+  }
+
+  // Lists the active sessions of the current user.
+  rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
+    option (google.api.http) = {
+      get: "/sessions"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List sessions";
+      description: "Lists the active sessions of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes an active session of the current user.
+  rpc DeleteSession (DeleteSessionRequest) returns (DeleteSessionResponse) {
+    option (google.api.http) = {
+      delete: "/sessions/{session_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete session";
+      description: "Deletes an active session of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes the current session of the current user.
+  rpc DeleteCurrentSession (DeleteCurrentSessionRequest) returns (DeleteCurrentSessionResponse) {
+    option (google.api.http) = {
+      delete: "/sessions"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete current session";
+      description: "Deletes the current session of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  rpc CreateAuthorizationToken (CreateAuthorizationTokenRequest) returns (AuthorizationToken) {
+    option (google.api.http) = {
+      post: "/authorization_token"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create authorization token";
+      description: "Creates an authorization token.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Checks if a given handle (username, email or phone number) is available for use.
+  rpc CheckHandleAvailability (CheckHandleAvailabilityRequest) returns (CheckHandleAvailabilityResponse);
+
+  // Creates a proof of work challenge.
+  rpc CreateProofOfWorkChallenge (google.protobuf.Empty) returns (ProofOfWorkChallenge) {
+    option (google.api.http) = {
+      post: "/challenges/proof_of_work"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create proof-of-work challenge";
+      description: "Creates a proof of work challenge.";
+    };
+  }
+
+  // Gets the user metadata of the current user.
+  rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse) {
+    option (google.api.http) = {
+      get: "/users/metadata"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Get metadata";
+      description: "Gets the user metadata of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates the user metadata of the current user.
+  rpc UpdateMetadata (UpdateMetadataRequest) returns (UpdateMetadataResponse) {
+    option (google.api.http) = {
+      put: "/users/metadata"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update metadata";
+      description: "Updates the user metadata of the current user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Validates the parameters used for OAuth authentication.
+  rpc ValidateOAuthParameters (ValidateOAuthParametersRequest) returns (ValidateOAuthParametersResponse) {
+    option (google.api.http) = {
+      get: "/oauth/validate_params"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Validate OAuth parameters";
+      description: "Validates the parameters used for OAuth authentication.";
+    };
+  }
+
+  // Get settings and parameters for widgets.
+  rpc GetWidgetsSettings (GetWidgetsSettingsRequest) returns (GetWidgetsSettingsResponse) {
+    option (google.api.http) = {
+      get: "/widgets/settings"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Gets widgets settings";
+      description: "Get settings and parameters for widgets.";
+    };
+  }
+}
+
+// The request for CreateDevice.
+message CreateDeviceRegistrationRequest {
+  // Response of a Proof-of-work challenge for anti-spam
+  ProofOfWorkResponse proof_of_work_response = 1;
+}
+
+// The request for CreateUser.
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string phone = 3;
+  string display_name = 4;
+  bool send_verification = 5;
+  string client_id = 6;
+}
+
+// The response for CreateUser.
+message CreateUserResponse {
+  User user = 1;
+  string refresh_token = 2;
+}
+
+// The request for UpdateCurrentUser.
+message UpdateCurrentUserRequest {
+  User user = 1;
+}
+
+// The request for StartPasswordAuthn.
+message StartPasswordAuthnRequest {
+  // Username, primary email or primary phone number of the user.
+  string user_handle = 1;
+  // A device token that authenticates the device.
+  string device_token = 2;
+  // The code challenge for PKCE.
+  string code_challenge = 3;
+  // The challenge method for PKCE. Must either be "plain" or "S256".
+  string code_challenge_method = 4;
+  // The redirect URL when a user is authenticated.
+  string success_redirect_url = 5;
+  // The client id to be signed on.
+  string client_id = 6;
+}
+
+// The request for PasswordAuthnKeyExchange.
+message PasswordAuthnKeyExchangeRequest {
+  // The key-exchange request message of the client.
+  bytes message = 1;
+  // A temporary token that is used during the authentication flow.
+  string temporary_token = 2;
+}
+
+// The request for StartAuthenticateSecondFactor.
+message StartAuthenticateSecondFactorRequest {
+  // A temporary token that is used during the authentication flow.
+  string temporary_token = 1;
+  // The selected second factor to authenticate.
+  AuthenticationState.ChallengeType challenge = 2;
+}
+
+// The response for StartAuthenticateSecondFactor.
+message StartAuthenticateSecondFactorResponse {}
+
+// The request for FinishPasswordAuthn.
+message FinishPasswordAuthnRequest {
+  // A temporary token that is used during the authentication flow.
+  string temporary_token = 1;
+  oneof response {
+    PasswordResponse password_response = 2;
+  }
+}
+
+// The request for AuthenticateSecondFactor.
+message AuthenticateSecondFactorRequest {
+  string temporary_token = 1;
+  AuthenticationState.ChallengeType challenge = 2;
+  string answer = 3;
+}
+
+// The request for StartResetPasswordAuthentication.
+message StartResetPasswordAuthenticationRequest {
+  // Username, primary email or primary phone number of the user.
+  string user_handle = 1;
+
+  // The device token that authenticates the device
+  string device_token = 2;
+
+  string client_id = 3;
+}
+
+// The request for AuthenticateResetPassword.
+message AuthenticateResetPasswordRequest {
+  string temporary_token = 1;
+
+  oneof response {
+    ContactToken contact_token = 2;
+  }
+}
+
+// The request for AuthenticateResetPasswordSecondFactor.
+message AuthenticateResetPasswordSecondFactorRequest {
+  string temporary_token = 1;
+}
+
+// The request for StartAuthenticateOAuth.
+message StartAuthenticateOAuthRequest {
+  OAuthFactor.OAuthService service = 1;
+  // The code challenge for PKCE.
+  string code_challenge = 2;
+  // The challenge method for PKCE. Must either be "plain" or "S256".
+  string code_challenge_method = 3;
+  // The redirect URL when a user is authenticated.
+  string success_redirect_url = 4;
+  // The client id to be signed on.
+  string client_id = 5;
+}
+
+// The response for StartAuthenticateOAuth.
+message StartAuthenticateOAuthResponse {
+  string oauth_endpoint_uri = 1;
+  string state = 2;
+}
+
+// The request for AuthenticateOAuth.
+message AuthenticateOAuthRequest {
+  string temporary_token = 1;
+  OAuthResponse oauth_response = 2;
+}
+
+// The response for AuthenticateOAuth.
+message AuthenticateOAuthResponse {
+  AuthenticationState authentication_state = 1;
+  bool create_account = 2;
+  string preferred_email = 3;
+  string access_token = 4;
+  string id_token = 6;
+  OAuthFactor.OAuthService service = 5;
+}
+
+// The request for StartCreateOAuthFactor.
+message StartCreateOAuthFactorRequest {
+  OAuthFactor.OAuthService service = 1;
+}
+
+// The response for StartCreateOAuthFactor.
+message StartCreateOAuthFactorResponse {
+  string oauth_endpoint_uri = 1;
+  string state = 2;
+}
+
+// The request for CreateOAuthFactor.
+message CreateOAuthFactorRequest {
+  string code = 1;
+  string state = 2;
+  OAuthFactor.OAuthService service = 3;
+}
+
+// The response for CreateOAuthFactor.
+message CreateOAuthFactorResponse {}
+
+// The request for CreateOAuthFactorByAccessToken.
+message CreateOAuthFactorByAccessTokenRequest {
+  string access_token = 1;
+  string id_token = 3;
+  OAuthFactor.OAuthService service = 2;
+}
+
+// The response for CreateOAuthFactorByAccessToken.
+message CreateOAuthFactorByAccessTokenResponse {
+  string access_token = 1;
+  OAuthFactor.OAuthService service = 2;
+}
+
+// The request for ListOAuthFactors.
+message ListOAuthFactorsRequest {}
+
+// The response for ListOAuthFactors.
+message ListOAuthFactorsResponse {
+  repeated OAuthFactor oauth_factors = 1;
+}
+
+// The request for DeleteOAuthFactor.
+message DeleteOAuthFactorRequest {
+  string id = 1;
+}
+
+// The response for DeleteOAuthFactor.
+message DeleteOAuthFactorResponse {}
+
+// The request for StartCreateSecondFactor.
+message StartCreateSecondFactorRequest {
+  oneof info {
+    SMSInfo sms_info = 1;
+  }
+}
+
+// The response for StartCreateSecondFactor.
+message StartCreateSecondFactorResponse {}
+
+// The request for CreateSecondFactor.
+message CreateSecondFactorRequest {
+  oneof info {
+    TOTPInfo totp_info = 1;
+    SMSInfo sms_info = 2;
+    BackupCodeInfo backup_code_info = 4;
+  }
+  string answer = 3;
+}
+
+// The response for CreateSecondFactor.
+message CreateSecondFactorResponse {}
+
+// The request for ListSecondFactors.
+message ListSecondFactorsRequest {
+  string type = 1;
+}
+
+// The response for ListSecondFactors.
+message ListSecondFactorsResponse {
+  repeated SecondFactor second_factors = 1;
+}
+
+// The request for DeleteSecondFactor.
+message DeleteSecondFactorRequest {
+  string id = 1;
+}
+
+// The response for DeleteSecondFactor.
+message DeleteSecondFactorResponse {}
+
+// The request for CreateContact.
+message CreateContactRequest {
+  Contact contact = 1;
+}
+
+// The request for ListContacts.
+message ListContactsRequest {
+  string type = 1;
+}
+
+// The response for ListContacts.
+message ListContactsResponse{
+  repeated Contact contacts = 1;
+}
+
+// The request for DeleteContact.
+message DeleteContactRequest {
+  string contact_id = 1;
+}
+
+// The response for DeleteContact.
+message DeleteContactResponse {}
+
+// The request for UpdateContact.
+message UpdatePrimaryContactRequest {
+  string contact_id = 1;
+}
+
+// The request for StartVerifyContact.
+message StartVerifyContactRequest {
+  string contact_id = 1;
+}
+
+// The response for StartVerifyContact.
+message StartVerifyContactResponse {}
+
+// The request for CompleteVerifyContact.
+message CompleteVerifyContactRequest {
+  message OAuthAccessToken {
+    OAuthFactor.OAuthService service = 1;
+    string access_token = 2;
+    string id_token = 3;
+  }
+  oneof response {
+    string token = 1;
+    ContactVerificationCode code = 2;
+    OAuthAccessToken oauth_access_token = 3;
+  }
+}
+
+// The response for CompleteVerifyContact.
+message CompleteVerifyContactResponse {}
+
+// The request for StartVerifyPrimaryContact.
+message StartVerifyPrimaryContactRequest {
+  Contact.Type type = 1;
+}
+
+// The response for StartVerifyPrimaryContact.
+message StartVerifyPrimaryContactResponse {}
+
+// The request for CompleteVerifyPrimaryContact.
+message CompleteVerifyPrimaryContactRequest {
+  Contact.Type type = 1;
+  string code = 2;
+}
+
+// The response for CompleteVerifyPrimaryContact.
+message CompleteVerifyPrimaryContactResponse {}
+
+// The request for StartChangePassword
+message StartChangePasswordRequest {}
+
+// The response for StartChangePassword
+message StartChangePasswordResponse {
+  // Salt for the user.
+  bytes salt = 1;
+}
+
+// The request for ChangePasswordKeyExchange
+message ChangePasswordKeyExchangeRequest {
+  // The key-exchange request message of the client.
+  bytes message = 1;
+}
+
+// The request for FinishChangePassword.
+message FinishChangePasswordRequest {
+  PasswordVerifier password_verifier = 1;
+  PasswordResponse old_password_response = 2;
+}
+
+// The response for FinishChangePassword.
+message FinishChangePasswordResponse {}
+
+// The request for ResetPassword.
+message ResetPasswordRequest {
+  PasswordVerifier password_verifier = 1;
+  string token = 2;
+}
+
+// The response for ResetPassword.
+message ResetPasswordResponse {}
+
+// The request for ListSessions.
+message ListSessionsRequest {
+  int64 page_size = 1;
+  string page_token = 2;
+  bool ascending = 3;
+}
+
+// The response for ListSessions.
+message ListSessionsResponse {
+  repeated Session sessions = 1;
+  string next_page_token = 2;
+  string previous_page_token = 4;
+  int32 total_size = 3;
+}
+
+// The request for DeleteSession.
+message DeleteSessionRequest {
+  string session_id = 1;
+}
+
+// The response for DeleteSession.
+message DeleteSessionResponse {}
+
+// The request for DeleteCurrentSession.
+message DeleteCurrentSessionRequest {}
+
+// The response for DeleteCurrentSession.
+message DeleteCurrentSessionResponse {}
+
+// The request for CreateAuthorizationToken.
+message CreateAuthorizationTokenRequest {
+  string code_challenge = 1;
+  string code_challenge_method = 2;
+  string client_id = 3;
+}
+
+// The request for CreateAccessToken.
+message CreateAccessTokenRequest {
+  enum GrantType {
+    AUTHORIZATION_TOKEN = 0;
+    REFRESH_TOKEN = 1;
+  }
+
+  GrantType grant_type = 1;
+  string token = 2;
+  string code_verifier = 3;
+}
+
+// The request for CreateMachineToken
+message CreateMachineTokenRequest {}
+
+// The response for CreateMachineToken
+message CreateMachineTokenResponse {
+  string machine_token = 1;
+}
+
+// The request for CheckHandleAvailability.
+message CheckHandleAvailabilityRequest {}
+
+// The response for CheckHandleAvailability.
+message CheckHandleAvailabilityResponse {}
+
+// The request for GetMetadata.
+message GetMetadataRequest {}
+
+// The request for GetMetadata.
+message GetMetadataResponse {
+  string user_metadata = 1;
+}
+
+// The request for UpdateMetadata.
+message UpdateMetadataRequest {
+  string user_metadata = 1;
+}
+
+// The response for UpdateMetadata.
+message UpdateMetadataResponse {
+  string user_metadata = 1;
+}
+
+// The request for ValidateOAuthParameters.
+message ValidateOAuthParametersRequest {
+  string scope = 1;
+  string client_id = 2;
+  string state = 3;
+  string redirect_uri = 4;
+  string response_type = 5;
+  string code_challenge = 6;
+  string code_challenge_method = 7;
+}
+
+// The response for ValidateOAuthParameters.
+message ValidateOAuthParametersResponse {}
+
+message GetWidgetsSettingsRequest {
+  string client_id = 1;
+}
+
+message GetWidgetsSettingsResponse {
+  string widgets_settings = 1;
+}
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  base_path: "/api/auth",
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+      }
+    }
+  }
+};

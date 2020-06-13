@@ -1,0 +1,63 @@
+- id: 1
+  actor_id: 1
+  action: "authcore.log.fixture.success1"
+  target: { "id": 1, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 2
+  actor_id: 2
+  action: "authcore.log.fixture.success2"
+  target: { "id": 2, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 3
+  actor_id: 1
+  action: "authcore.log.fixture.success3"
+  target: { "id": 1, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 4
+  actor_id: 2
+  action: "authcore.log.fixture.success4"
+  target: { "id": 2, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 5
+  actor_id: 1
+  action: "authcore.log.fixture.success5"
+  target: { "id": 1, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 6
+  actor_id: 2
+  action: "authcore.log.fixture.success6"
+  target: { "id": 2, "type": "user" }
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false
+- id: 7
+  actor_id: null
+  action: "authcore.log.fixture.success7"
+  target: {}
+  session_id: null
+  device: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+  ip: "127.0.0.1"
+  result: 2
+  is_external: false

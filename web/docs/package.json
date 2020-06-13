@@ -1,0 +1,13 @@
+{
+  "name": "authcore-docs",
+  "version": "1.0",
+  "private": true,
+  "scripts": {
+    "serve": "redoc-cli serve ../../api/v2/openapi.yml -t layout.hbs --title 'Authcore API 2.0' --watch",
+    "build": "redoc-cli bundle ../../api/v2/openapi.yml -o ../dist/docs/index.html -t layout.hbs --title 'Authcore API 2.0'"
+  },
+  "dependencies": {
+    "redoc": "^2.0.0-rc.28",
+    "redoc-cli": "^0.9.7"
+  }
+}

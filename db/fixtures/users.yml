@@ -1,0 +1,129 @@
+# A user who haven't set password
+- id: 1
+  username: bob
+  email: bob@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  phone: "+85223456789"
+  phone_verified_at: 2019-03-18 15:18:33
+  display_name: Bob
+  name: Bob
+  user_metadata: '{"favourite_links":["https://github.com","https://blocksq.com"]}'
+  app_metadata: '{"kyc_status":false}'
+  language: 'zh-HK'
+  last_seen_at: 2018-11-15 08:27:58
+# A user who has password only (Password: "password")
+- id: 2
+  username: carol
+  email: carol@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  phone: "+85221111111"
+  phone_verified_at: null
+  display_name: Carol
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  user_metadata: '{"favourite_links":["https://github.com","https://blocksq.com"]}'
+  app_metadata: '{"kyc_status":false}'
+# A user who has enabled TOTP and backup code (Password: "password")
+- id: 3
+  username: factor
+  email: factor@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  phone: "+85233333333"
+  phone_verified_at: 2019-03-18 15:18:33
+  display_name: Factor
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+# Another user who has enabled TOTP (Password: "password")
+- id: 4
+  username: twofactor
+  email: twofactor@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  phone: "+85233333334"
+  phone_verified_at: 2019-03-18 15:18:33
+  display_name: TwoFactor
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+# A user who has enabled SMS authentication (Password: "password")
+- id: 5
+  username: smith
+  display_name: Smith
+  email: smith@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  phone: "+85298765432"
+  phone_verified_at: 2019-03-18 15:18:33
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+# A user who has been locked.  How sad :(
+- id: 6
+  username: benny
+  email: benny@example.com
+  email_verified_at: 2019-01-11 09:18:33
+  display_name: Benny
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  is_locked: 1
+  lock_expired_at: 2038-01-19 00:00:00
+  lock_description: "Too lovely"
+  last_seen_at: 2018-11-12 08:27:58
+  language: 'en'
+# User with non-verified contact
+- id: 7
+  username: non-verified
+  display_name: non-verified
+  email: non-verified@example.com
+  email_verified_at: null
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+# User with non-verified primary contact
+- id: 8
+  username: non-verified-primary
+  email: non-verified-primary@example.com
+  display_name: non-verified-primary
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+# User with no email
+- id: 9
+  username: no-email
+  phone: "+85239999999"
+  display_name: no-email
+  language: 'en'
+- id: 10
+  username: no-contact
+  display_name: no-contact
+  language: 'en'
+# User with OAuth authentication
+- id: 11
+  username: oliver
+  display_name: Oliver
+  language: 'en'
+# Last items. Add items to be test before here.
+- id: 98
+  username: lastplusone
+  email: "lastplusone@example.com"
+  email_verified_at: 2019-01-11 09:18:33
+  display_name: lastplusone
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'
+- id: 99
+  username: last
+  display_name: last
+  email: "last@example.com"
+  email_verified_at: 2019-01-11 09:18:33
+  password_salt: _Jb4pAuatq5rrwdNRGRqW-PhlqzNR1pYtp1N5YWEn7s
+  encrypted_password_verifier_w0: H9EeC9z9ndtqPVIz59_hWUUh8_TFdowJApvxHkbRhTZeTsrue0cxUgqUkZ_3QJShr3sjEVFbs_L5Ca3LFIHbPlpWULzMUxmbZSVDQkLSQMdxxxNP1CH9
+  encrypted_password_verifier_l: 89obToiiylZJ2bWw9neAUtD-Xvu_zhhj-HHzQveMHMUNhFZh719_tYgBRvp2LRflO6Rko9q7bUCCRgz4mSBYSibpmCo9y8GoFvWBarSUu-dBqAh2OMVT_ifCPAu2qLqdFJQZRAzM
+  language: 'en'

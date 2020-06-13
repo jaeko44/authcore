@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "redoc": "^2.0.0-rc.12",
+    "redoc-cli": "^0.8.6"
+  },
+  "name": "docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
+}

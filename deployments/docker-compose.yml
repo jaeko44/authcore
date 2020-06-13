@@ -1,0 +1,27 @@
+version: '3.4'
+services:
+  server:
+    image: registry.gitlab.com/blocksq/authcore:918-improve-docker-first-time-deployment-experience-de018c66b9b23e5d76455d37f4f2e78bb7777706
+    environment: 
+      DATABASE_URL: mysql://root:development@db/authcore_development?parseTime=true
+      ADMIN_PASSWORD: 'development'
+      ADMIN_EMAIL: 'alice@example.com'
+      #ADMIN_PHONE: '00000000' # use email or phone
+    volumes: 
+      - ./configs:/app/configs/:cached
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 127.0.0.1:7000:7000 # gRPC port
+      - 127.0.0.1:8000:80 # HTTP port
+      - 127.0.0.1:8001:443 # HTTPS port
+  db:
+    image: mysql:8.0
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: development
+  redis:
+    image: redis:latest
+    restart: always

@@ -1,0 +1,129 @@
+# An example for `vouch-proxy/config.yml`
+
+# vouch config
+
+# you should probably start with one of the other configs in the example directory
+# vouch proxy does a fairly good job of setting its config to sane defaults
+
+# be aware of your indentation, the only top level elements are `vouch` and `oauth`. 
+
+vouch:
+  # logLevel: debug
+  logLevel: info
+  listen: 0.0.0.0
+  port: 9090
+
+  # domains:
+  # each of these domains must serve the url https://vouch.$domains[0] https://vouch.$domains[1] ...
+  # so that the cookie which stores the JWT can be set in the relevant domain
+  # you usually *don't* want to list every individual website that will be protected
+  # if you have siteA.internal.yourdomain.com and siteB.internal.yourdomain.com 
+  # then your domains should be set as yourdomain.com or perhaps internal.yourdomain.com   
+  # usually you'll just have one.
+  # Comment `domains:` out if you set allowAllUser:true
+  domains:
+  - 127.0.0.1
+  - doorknob2.blocksq.com
+
+  # set allowAllUsers: true to use Vouch Proxy to just accept anyone who can authenticate at the configured provider
+  # allowAllUsers: false
+
+  # Setting publicAccess: true will accept all requests, even without a cookie. 
+  # If the user is logged in, the cookie will be validated and the user header will be set.
+  # You will need to direct people to the Vouch Proxy login page from your application.
+  # publicAccess: false
+
+  # whiteList (optional) allows only the listed usernames
+  # usernames are usually email addresses (google, most oidc providers) or login/username for github and github enterprise
+  whiteList:
+  - elton.lee@blocksq.com
+  - kc@blocksq.com
+  - samuel@blocksq.com
+  - uphoebeyu@blocksq.com
+
+  jwt:
+    # secret: a random string used to cryptographically sign the jwt
+    # Vouch Proxy complains if the string is less than 44 characters (256 bits as 32 base64 bytes)
+    # if the secret is not set here then..
+    # look for the secret in `./config/secret`
+    # if `./config/secret` doesn't exist then randomly generate a secret and store it there
+    # in order to run multiple instances of vouch on multiple servers (perhaps purely for validating the jwt),
+    # you'll want them all to have the same secret
+    # secret: your_random_string
+    issuer: Vouch
+    # number of minutes until jwt expires
+    maxAge: 240
+    # compress the jwt
+    compress: true
+
+  cookie: 
+    # name of cookie to store the jwt
+    name: VouchCookie
+    # optionally force the domain of the cookie to set
+    # domain: yourdomain.com
+    secure: false
+    httpOnly: true
+    # Set cookie maxAge to 0 to delete the cookie every time the browser is closed.
+    maxAge: 14400
+
+  session:
+    # name of session variable stored locally
+    name: VouchSession
+    # key: a cryptographic string used to store the session variable
+    # if the key is not set here then it is generated at startup and stored in memory
+    # Vouch Proxy complains if the string is less than 44 characters (256 bits as 32 base64 bytes)
+    # you only want to set this if you're running multiple user facing vouch.yourdomain.com instances
+    # key: you_random_key
+
+
+  headers:
+    jwt: X-Vouch-Token
+    querystring: access_token
+    redirect: X-Vouch-Requested-URI
+    # Claims is a list of claims that will be stored in the JWT and passed down to applications via headers
+    # By default claims are sent down as headers with a prefix of X-Vouch-IdP-Claims-ClaimKey
+    # Only when a claim is found in the user's info will the header exist.  This is optional.  These are case sensitive.
+    claims:
+      - groups
+      - given_name
+    # these will result in two headers being passed back to nginx
+    # X-Vouch-IdP-Claims-groups
+    # X-Vouch-IdP-Claims-given_name
+      
+    # Customizable claim header. 
+    # claimheader: My-Custom-Claim-Prefix
+
+
+  db: 
+    file: data/vouch_bolt.db
+
+  # testing: force all 302 redirects to be rendered as a webpage with a link
+  testing: false
+  # test_url: add this URL to the page which vouch displays
+  test_url: http://127.0.0.1
+  # webapp: WIP for web interface to vouch (mostly logs)
+  webapp: true
+  logLevel: debug
+
+#
+# OAuth Provider
+# configure ONLY ONE of the following oauth providers
+#
+oauth:
+  provider: oidc
+  client_id: authcore.io
+  client_secret: secret
+  # Authcore.io: Testing configuration
+  auth_url: http://127.0.0.1:8000/oidc/authorize
+  token_url: http://192.168.6.141:8000/oidc/token
+  user_info_url: http://192.168.6.141:8000/oidc/userinfo
+  # Authcore.io: Staging configuration
+  # auth_url: https://authcore-staging.doorknob.blocksq.com/oidc/authorize
+  # token_url: https://authcore-staging.doorknob.blocksq.com/oidc/token
+  # user_info_url: https://authcore-staging.doorknob.blocksq.com/oidc/userinfo
+  scopes:
+    - email
+  # Authcore.io: Testing configuration
+  callback_url: http://127.0.0.1:9090/auth
+  # Authcore.io: Staging configuration
+  # callback_url: http://doorknob2.blocksq.com/auth

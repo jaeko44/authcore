@@ -1,0 +1,38 @@
+keyframes loading {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+$font-family-base: 'Helvetica';
+$btn-disabled-opacity: 1;
+$input-group-addon-bg: #fff;
+$table-border-color-shallow: #dee2e655;
+$table-border-color-deep: #dee2e6aa;
+$sizes: (
+  60: 60%
+);
+
+$profile-icon-size: 60px;
+$general-content-padding-top: 0;
+
+$ph-bg: #ffffff55;
+$ph-color: #ced4da;
+$ph-gutter: 0px;
+$ph-spacer: 0px;
+
+$ph-animation-duration: 1.5s;
+
+$border-color: #cccccc;
+
+$navigation-bar-link-color: #9ea4c1;
+
+$table-theme-full-border-size: 0.125rem;
+$table-general-td-padding-x: 0.75rem;
+$table-general-td-padding-y: 1rem;
+
+$general-border-size: 0.0625rem; // 1px
+$general-border-radius: 0.1875rem; // 3px
+
+// Using the bootstrap-vue SCSS source directly. Should include design system source as well.
+@import '~bootstrap-vue/src/index';

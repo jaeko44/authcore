@@ -1,0 +1,860 @@
+syntax = "proto3";
+
+package authcore.managementapi.v1;
+
+import "authapi/authcore_entity.proto";
+import "managementapi/management_entity.proto";
+
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option go_package = "authcore.io/authcore/pkg/api/managementapi";
+
+service ManagementService {
+
+  // Lists all users or list a user filtered by its handle (username, primary email or primary phone).
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/users"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List users";
+      description: "Lists all users or list a user filtered by its handle (username, primary email or primary phone).";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates a new user.
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/users"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create user";
+      description: "Creates a new user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Gets an user.
+  rpc GetUser (GetUserRequest) returns (authcore.authapi.v1.User) {
+    option (google.api.http) = {
+      get: "/users/{user_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Get user";
+      description: "Gets an user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates an user.
+  rpc UpdateUser (UpdateUserRequest) returns (authcore.authapi.v1.User) {
+    option (google.api.http) = {
+      put: "/users/{user_id}"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update user";
+      description: "Updates an user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Changes the password of a user.
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse) {
+    option (google.api.http) = {
+      post: "/users/password"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Change password";
+      description: "Changes the password of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Adds a contact for a user.
+  rpc CreateContact (CreateContactRequest) returns (authcore.authapi.v1.Contact) {
+    option (google.api.http) = {
+      post: "/users/{user_id}/contacts"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create contact";
+      description: "Adds a contact for a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the contacts of a user.
+  rpc ListContacts (ListContactsRequest) returns (ListContactsResponse) {
+    option (google.api.http) = {
+      get: "/users/{user_id}/contacts"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List contacts";
+      description: "Lists the contacts of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes a contact of a user.
+  rpc DeleteContact (DeleteContactRequest) returns (DeleteContactResponse) {
+    option (google.api.http) = {
+      delete: "/contacts/{contact_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete contact";
+      description: "Deletes a contact of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Initiates a contact verification for a user.
+  rpc StartVerifyContact (StartVerifyContactRequest) returns (StartVerifyContactResponse) {
+    option (google.api.http) = {
+      post: "/contacts/verify"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Start verify contact";
+      description: "Initiates a contact verification for a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates the primary contact for a user.
+  rpc UpdatePrimaryContact (UpdatePrimaryContactRequest) returns (authcore.authapi.v1.Contact) {
+    option (google.api.http) = {
+      put: "/contacts/{contact_id}/primary"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update primary contact";
+      description: "Updates the primary contact for a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the roles.
+  rpc ListRoles (ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {
+      get: "/roles"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List roles";
+      description: "List the roles.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Creates a non-system role.
+  rpc CreateRole (CreateRoleRequest) returns (Role) {
+    option (google.api.http) = {
+      post: "/roles"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create role";
+      description: "Creates a non-system role.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes a non-system role.
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse)  {
+    option (google.api.http) = {
+      delete: "/roles/{role_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete role";
+      description: "Deletes a non-system role.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Assigns a role to a user.
+  rpc AssignRole (AssignRoleRequest) returns (AssignRoleResponse) {
+    option (google.api.http) = {
+      post: "/users/{user_id}/roles"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Assign role";
+      description: "Assigns a role to a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Unassigns a role from a user.
+  rpc UnassignRole (UnassignRoleRequest) returns (UnassignRoleResponse) {
+    option (google.api.http) = {
+      delete: "/users/{user_id}/roles/{role_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Unassign role";
+      description: "Unassigns a role from a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the role assignments of a role.
+  rpc ListRoleAssignments (ListRoleAssignmentsRequest) returns (ListRoleAssignmentsResponse) {
+    option (google.api.http) = {
+      get: "/users/{user_id}/roles"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List role assignments";
+      description: "Lists the role assignments of a role.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the permission assignments of a role.
+  rpc ListPermissionAssignments (ListPermissionAssignmentsRequest) returns (ListPermissionAssignmentsResponse) {
+    option (google.api.http) = {
+      get: "/roles/{role_id}/permissions"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List permission assignments";
+      description: "Lists the permission assignments of a role.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the owned permissions.
+  rpc ListCurrentUserPermissions (ListCurrentUserPermissionsRequest) returns (ListCurrentUserPermissionsResponse) {
+    option (google.api.http) = {
+      get: "/users/current/permissions"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List current user permissions";
+      description: "Lists the owned permissions.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the OAuth factors of a user.
+  rpc ListOAuthFactors (ListOAuthFactorsRequest) returns (ListOAuthFactorsResponse) {
+    option (google.api.http) = {
+      get: "/users/{user_id}/oauth_factors"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List OAuth factors";
+      description: "Lists the OAuth factors of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes a OAuth factor of a user.
+  rpc DeleteOAuthFactor (DeleteOAuthFactorRequest) returns (DeleteOAuthFactorResponse) {
+    option (google.api.http) = {
+      delete: "/oauth_factors/{id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete OAuth factor";
+      description: "Deletes a OAuth factor of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the second factors of a user.
+  rpc ListSecondFactors (ListSecondFactorsRequest) returns (ListSecondFactorsResponse) {
+    option (google.api.http) = {
+      get: "/users/{user_id}/second_factors"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List second factors";
+      description: "Lists the second factors of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the active sessions of a user.
+  rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {
+    option (google.api.http) = {
+      get: "/sessions"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List sessions";
+      description: "Lists the active sessions of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Create an session for a user.
+  rpc CreateSession (CreateSessionRequest) returns (authcore.authapi.v1.AccessToken) {
+    option (google.api.http) = {
+      post: "/sessions"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create session";
+      description: "Creates an session for a user. This should be used with caution, as this API assumes the site (admin) to authenticate user with their own means. This can bypass the Authcore login progress by issuing a valid Session."
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Deletes an active session for a user.
+  rpc DeleteSession (DeleteSessionRequest) returns (DeleteSessionResponse) {
+    option (google.api.http) = {
+      delete: "/sessions/{session_id}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Delete session";
+      description: "Deletes an active session for a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Lists the audit logs.
+  rpc ListAuditLogs (ListAuditLogsRequest) returns (ListAuditLogsResponse) {
+    option (google.api.http) = {
+      get: "/audit_logs"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List audit logs";
+      description: "Lists the audit logs.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Gets the user metadata and app metadata of a user.
+  rpc GetMetadata (GetMetadataRequest) returns (GetMetadataResponse) {
+    option (google.api.http) = {
+      get: "/users/{user_id}/metadata"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Get metadata";
+      description: "Gets the user metadata and app metadata of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  // Updates the user metadata and app metadata of a user.
+  rpc UpdateMetadata (UpdateMetadataRequest) returns (UpdateMetadataResponse) {
+    option (google.api.http) = {
+      put: "/users/{user_id}/metadata"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Update metadata";
+      description: "Updates the user metadata and app metadata of a user.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  rpc ListTemplates (ListTemplatesRequest) returns (ListTemplatesResponse) {
+    option (google.api.http) = {
+      get: "/template/{type}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "List templates";
+      description: "Lists the templates for email or SMS.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  rpc GetTemplate (GetTemplateRequest) returns (Template) {
+    option (google.api.http) = {
+      get: "/templates/{type}/{name}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Get template";
+      description: "Get a template for email or SMS.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  rpc CreateTemplate (CreateTemplateRequest) returns (CreateTemplateResponse) {
+    option (google.api.http) = {
+      post: "/templates"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Create a template";
+      description: "Create a template for email or SMS. If the template with language and name already exists, update the template instead.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+
+  rpc ResetTemplate (ResetTemplateRequest) returns (ResetTemplateResponse) {
+    option (google.api.http) = {
+      delete: "/templates/{type}/{name}"
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      summary: "Reset a template";
+      description: "Reset a template for email or SMS.";
+      security: {
+        security_requirement: {
+          key: "BearerAuth";
+          value: {}
+        }
+      }
+    };
+  }
+}
+
+// The request for ListUsers.
+message ListUsersRequest {
+  int64 page_size = 1;
+  string page_token = 2;
+  bool ascending = 3;
+  string user_handle = 4;
+  string sort_key = 5;
+  string query_key = 6;
+  string query_value = 7;
+}
+
+// The response for ListUsers.
+message ListUsersResponse {
+  repeated authcore.authapi.v1.User users = 1;
+  string next_page_token = 2;
+  string previous_page_token = 4;
+  int32 total_size = 3;
+}
+
+// The request for CreateUser.
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string phone = 3;
+  string display_name = 4;
+  repeated OAuthFactor oauth_factors = 5;
+}
+
+// The response for CreateUser.
+message CreateUserResponse {
+  authcore.authapi.v1.User user = 1;
+  string refresh_token = 2;
+}
+
+// The request for GetUser.
+message GetUserRequest {
+  string user_id = 1;
+}
+
+// The request for UpdateUser.
+message UpdateUserRequest {
+  enum Type {
+    PROFILE = 0;
+    LOCK = 1;
+  }
+  string user_id = 1;
+  authcore.authapi.v1.User user = 2;
+  Type type = 3;
+}
+
+// The request for ChangePassword.
+message ChangePasswordRequest {
+  string user_id = 1;
+  authcore.authapi.v1.PasswordVerifier password_verifier = 2;
+  authcore.authapi.v1.PasswordResponse old_password_response = 3;
+}
+
+// The response for ChangePassword.
+message ChangePasswordResponse {}
+
+// The request for CreateContact.
+message CreateContactRequest {
+  string user_id = 1;
+  authcore.authapi.v1.Contact contact = 2;
+}
+
+// The request for ListContacts.
+message ListContactsRequest {
+  string user_id = 1;
+  string type = 2;
+}
+
+// The response for ListContacts.
+message ListContactsResponse {
+  repeated authcore.authapi.v1.Contact contacts = 1;
+}
+
+// The request for DeleteContact.
+message DeleteContactRequest {
+  string contact_id = 1;
+}
+
+// The response for DeleteContact.
+message DeleteContactResponse {}
+
+// The request for StartVerifyContact.
+message StartVerifyContactRequest {
+  string contact_id = 1;
+}
+
+// The response for StartVerifyContact.
+message StartVerifyContactResponse {}
+
+// The request for UpdatePrimaryContact.
+message UpdatePrimaryContactRequest {
+  string contact_id = 1;
+}
+
+// The request for ListRoles.
+message ListRolesRequest {}
+
+// The response for ListRoles.
+message ListRolesResponse {
+  repeated Role roles = 1;
+}
+
+// The request for CreateRole.
+message CreateRoleRequest {
+  string name = 1;
+}
+
+// The request for DeleteRole.
+message DeleteRoleRequest {
+  string role_id = 1;
+}
+
+// The response for DeleteRole.
+message DeleteRoleResponse {}
+
+// The request for AssignRole.
+message AssignRoleRequest {
+  string user_id = 1;
+  string role_id = 2;
+}
+
+// The response for AssignRole.
+message AssignRoleResponse {}
+
+// The request for UnassignRole.
+message UnassignRoleRequest {
+  string user_id = 1;
+  string role_id = 2;
+}
+
+// The response for UnassignRole.
+message UnassignRoleResponse {}
+
+// The request for ListRoleAssignments.
+message ListRoleAssignmentsRequest {
+  string user_id = 1;
+}
+
+// The response for ListRoleAssignments.
+message ListRoleAssignmentsResponse {
+  repeated Role roles = 1;
+}
+
+// The request for ListPermissionAssignments.
+message ListPermissionAssignmentsRequest {
+  string role_id = 1;
+}
+
+// The response for ListPermissionAssignments.
+message ListPermissionAssignmentsResponse {
+  repeated Permission permissions = 1;
+}
+
+// The request for ListCurrentUserPermissions.
+message ListCurrentUserPermissionsRequest {}
+
+// The response for ListCurrentUserPermissions.
+message ListCurrentUserPermissionsResponse {
+  repeated Permission permissions = 1;
+}
+
+// The request for ListOAuthFactors.
+message ListOAuthFactorsRequest {
+  string user_id = 1;
+}
+
+// The response for ListOAuthFactors.
+message ListOAuthFactorsResponse {
+  repeated authcore.authapi.v1.OAuthFactor oauth_factors = 1;
+}
+
+// The request for DeleteOAuthFactor.
+message DeleteOAuthFactorRequest {
+  string id = 1;
+}
+
+// The response for DeleteOAuthFactor.
+message DeleteOAuthFactorResponse {}
+
+// The request for ListSecondFactors.
+message ListSecondFactorsRequest {
+  string user_id = 1;
+}
+
+// The response for ListSecondFactors.
+message ListSecondFactorsResponse {
+  repeated authcore.authapi.v1.SecondFactor second_factors = 1;
+}
+
+// The request for ListSessions.
+message ListSessionsRequest {
+  string user_id = 1;
+  int64 page_size = 2;
+  string page_token = 3;
+  bool ascending = 4;
+}
+
+// The response for ListSessions.
+message ListSessionsResponse {
+  repeated authcore.authapi.v1.Session sessions = 1;
+  string next_page_token = 2;
+  string previous_page_token = 4;
+  int32 total_size = 3;
+}
+
+// The request for CreateSession
+message CreateSessionRequest {
+  string user_id = 1;
+  string device_id = 2;
+}
+
+// The request for DeleteSession.
+message DeleteSessionRequest {
+  string session_id = 1;
+}
+
+// The response for DeleteSession.
+message DeleteSessionResponse {}
+
+// The request for GetMetadata.
+message GetMetadataRequest {
+  string user_id = 1;
+}
+
+// The request for GetMetadata.
+message GetMetadataResponse {
+  string user_metadata = 1;
+  string app_metadata = 2;
+}
+
+// The request for UpdateMetadata.
+message UpdateMetadataRequest {
+  string user_id = 1;
+  string user_metadata = 2;
+  string app_metadata = 3;
+}
+
+// The response for UpdateMetadata.
+message UpdateMetadataResponse {
+  string user_metadata = 1;
+  string app_metadata = 2;
+}
+
+// The request for ListAuditLogs.
+message ListAuditLogsRequest {
+  int64 page_size = 1;
+  string page_token = 2;
+  bool ascending = 3;
+  string user_id = 4;
+}
+
+// The response for ListAuditLogs.
+message ListAuditLogsResponse {
+  repeated authcore.authapi.v1.AuditLogEntity audit_logs = 1;
+  string next_page_token = 2;
+  string previous_page_token = 4;
+  int32 total_size = 3;
+}
+
+// The request for ListTemplates.
+message ListTemplatesRequest {
+  string type = 1;
+}
+
+// The response for ListTemplates.
+message ListTemplatesResponse {
+  repeated Template templates = 1;
+  repeated TemplateLanguage languages = 2;
+}
+
+// The request for GetTemplate.
+message GetTemplateRequest {
+  string type = 1;
+  string language = 2;
+  string name = 3;
+}
+
+// The request for CreateTemplate.
+message CreateTemplateRequest {
+  Template template = 1;
+}
+
+// The response for CreateTemplate.
+message CreateTemplateResponse {}
+
+// The request for ResetTemplate.
+message ResetTemplateRequest {
+  string type = 1;
+  string language = 2;
+  string name = 3;
+}
+
+// The response for ResetTemplate.
+message ResetTemplateResponse {}
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  base_path: "/api/management",
+  security_definitions: {
+    security: {
+      key: "BearerAuth";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+      }
+    }
+  }
+};

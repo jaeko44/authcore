@@ -1,0 +1,103 @@
+{
+  "name": "authcore-web",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "test": "NODE_ENV=test nyc --all --reporter=html --reporter=text-summary vue-cli-service test:unit --reporter=mochawesome --recursive test -u tdd --exit",
+    "serve": "vue-cli-service serve --port 5001",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "lint-fix": "vue-cli-service lint --fix"
+  },
+  "dependencies": {
+    "authcore-js": "https://gitlab.com/blocksq/authcore-js.git",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "git+https://gitlab+deploy-token-87852:sNtfEQDMxcWx6bRszzwa@gitlab.com/blocksq/bootstrap-vue.git",
+    "chart.js": "^2.8.0",
+    "htmlhint": "^0.11.0",
+    "jquery": "^3.3.1",
+    "js-beautify": "^1.9.1",
+    "jsonlint-mod": "^1.7.4",
+    "libphonenumber-js": "^1.7.15",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "placeholder-loading": "^0.2.1",
+    "popper.js": "^1.14.6",
+    "query-string": "^6.12.1",
+    "vue": "^2.5.17",
+    "vue-chartjs": "^3.4.2",
+    "vue-codemirror": "^4.0.6",
+    "vue-i18n": "^8.8.2",
+    "vue-multiselect": "^2.1.6",
+    "vue-router": "^3.0.1",
+    "vue-scrollto": "^2.17.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/preset-env": "^7.3.3",
+    "@vue/cli-plugin-babel": "^3.1.1",
+    "@vue/cli-plugin-eslint": "^3.1.5",
+    "@vue/cli-plugin-unit-mocha": "^3.4.0",
+    "@vue/cli-service": "^3.3.1",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-eslint": "^10.0.3",
+    "chai": "^4.2.0",
+    "eslint": "^6.3.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.1.1",
+    "node-sass": "^4.11.0",
+    "nyc": "^13.2.0",
+    "sass-loader": "^7.1.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "resolutions": {
+    "browserify-sign": "4.0.4"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "mocha": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "standard"
+    ],
+    "rules": {
+      "no-console": "off"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "nyc": {
+    "include": "src/**"
+  }
+}

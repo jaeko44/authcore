@@ -1,0 +1,989 @@
+openapi: "3.0.2"
+info:
+  title: Authcore API
+  version: "2.0"
+paths:
+  /api/v2/ui_preferences:
+    get:
+      summary: UI preferences
+      tags:
+        - ui
+      parameters:
+        - in: query
+          name: client_id
+          description: Application ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v2/audit_logs:
+    get:
+      summary: List Audit Logs
+      tags:
+        - audit_logs
+      parameters:
+        - in: query
+          name: user_id
+          description: User ID
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: limit
+          description: Pagination Object limit
+          schema:
+            type: string
+        - in: query
+          name: page_token
+          description: Pagination Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v2/authn:
+    post:
+      summary: Start an local authentication transaction
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                handle:
+                  type: string
+                code_challenge_method:
+                  type: string
+                code_challenge:
+                  type: string
+                redirect_uri:
+                  type: string
+                  format: uri
+              required:
+                - client_id
+                - handle
+                - redirect_uri
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/password:
+    post:
+      summary: Request a password key exchange challenge
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state_token:
+                  type: string
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  challenge:
+                    type: string
+  /api/v2/authn/password/verify:
+    post:
+      summary: Verify password factor
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state_token:
+                  type: string
+                verifier:
+                  type: string
+              required:
+                - state_token
+                - verifier
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/mfa/{method}:
+    post:
+      summary: Request a MFA challenge
+      tags:
+        - authn
+      parameters:
+        - in: path
+          name: method
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                state_token:
+                  type: string
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  challenge:
+                    type: string
+  /api/v2/authn/mfa/{method}/verify:
+    post:
+      summary: Verify a MFA factor
+      tags:
+        - authn
+      parameters:
+        - in: path
+          name: method
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                state_token:
+                  type: string
+                verifier:
+                  type: string
+              required:
+                - state_token
+                - verifier
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/idp/{provider}:
+    post:
+      summary: Start a third-party IDP authentication transaction
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                code_challenge:
+                  type: string
+                code_challenge_method:
+                  type: string
+                redirect_uri:
+                  type: string
+                  format: uri
+              required:
+                - client_id
+                - handle
+                - redirect_uri
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/idp/{provider}/verify:
+    post:
+      summary: Verify a third-party IDP authorization grant
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state_token:
+                  type: string
+                code:
+                  type: string
+              required:
+                - state_token
+                - code
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/idp_binding/{provider}:
+    post:
+      summary: Start a third-party IDP binding transaction
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/authn/idp_binding/{provider}/verify:
+    post:
+      summary: Verify a third-party IDP authorization grant for a third-party IDP binding transaction.
+      tags:
+        - authn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state_token:
+                  type: string
+                code:
+                  type: string
+              required:
+                - state_token
+                - code
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/idp/{id}:
+    get:
+      summary: Get IDP
+      tags:
+        - idp
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IDP"
+  /api/v2/mfa/{id}:
+    delete:
+      summary: Delete MFA
+      tags:
+        - mfa
+      responses:
+        "204":
+          description: Success
+  /api/v2/signup:
+    post:
+      summary: Create a new user using primary authentication method.
+      tags:
+        - signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                password_verifier:
+                  $ref: '#/components/schemas/PasswordVerifier'
+                redirect_uri:
+                  type: string
+                  format: uri
+                email:
+                  type: string
+                phone:
+                  type: string
+                name:
+                  type: string
+              required:
+                - client_id
+                - password_verifier
+                - redirect_uri
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthnState"
+  /api/v2/sessions/{id}:
+    get:
+      summary: Get session
+      tags:
+        - session
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+    delete:
+      summary: Delete session
+      tags:
+        - session
+      responses:
+        "204":
+          description: Success
+  /api/v2/templates:
+    get:
+      summary: List Avaliable Languages
+      tags:
+        - template
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: string
+  /api/v2/templates/{type}/{lang}:
+    get:
+      summary: List templates.
+      tags:
+        - template
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Template"
+  /api/v2/templates/{type}/{lang}/{name}:
+    get:
+      summary: Get template.
+      tags:
+        - template
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TemplateString"
+    post:
+      summary: Update template.
+      tags:
+        - template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateString"
+      responses:
+        "204":
+          description: "Success"
+    delete:
+      summary: Reset template to its default.
+      tags:
+        - template
+      responses:
+        "204":
+          description: "Success"
+  /api/v2/users:
+    get:
+      summary: List users
+      tags:
+        - users
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+    post:
+      summary: Create a new user.
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                verifier:
+                  $ref: '#/components/schemas/PasswordVerifier'
+                email:
+                  type: string
+                phone:
+                  type: string
+                name:
+                  type: string
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  refresh_token:
+                    type: string
+  /api/v2/users/{id}:
+    get:
+      summary: Get user
+      tags:
+        - users
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      summary: Update user
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                preferred_username:
+                  type: string
+                email:
+                  type: string
+                email_verified:
+                  type: boolean
+                phone_number:
+                  type: string
+                phone_number_verified:
+                  type: boolean
+                user_metadata:
+                  type: object
+                app_metadata:
+                  type: object
+                is_locked:
+                  type: boolean
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      summary: Delete user
+      tags:
+        - users
+      responses:
+        "204":
+          description: Success
+  /api/v2/users/{id}/idp:
+    get:
+      summary: List user linked IDP
+      tags:
+        - user
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/IDP"
+  /api/v2/users/{id}/idp/{service}:
+    delete:
+      summary: Unlink user IDP
+      tags:
+        - user
+      responses:
+        "204":
+          description: "Success"
+  /api/v2/users/{id}/mfa:
+    get:
+      summary: List user MFA
+      tags:
+        - user
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MFA"
+  /api/v2/users/{id}/password:
+    post:
+      summary: Update user password
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordVerifier"
+      responses:
+        "204":
+          description: Success
+  /api/v2/users/{id}/roles:
+    get:
+      summary: Get user's roles.
+      tags:
+        - user
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+    post:
+      summary: Assign new role to user
+      tags:
+        - user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: integer
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+  /api/v2/users/{id}/roles/{role_id}:
+    delete:
+      summary: Unassign a role for user
+      tags:
+        - user
+      responses:
+        "204":
+          description: "Success"
+  /api/v2/users/{id}/sessions:
+    get:
+      summary: Get user sessions.
+      tags:
+        - user
+      parameters:
+        - in: query
+          name: limit
+          description: Pagination Object limit
+          schema:
+            type: string
+        - in: query
+          name: page_token
+          description: Pagination Token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Session"
+  /api/v2/users/current:
+    get:
+      summary: Get current user
+      tags:
+        - current_user
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v2/users/current/mfa:
+    get:
+      summary: List current user's MFA
+      tags:
+        - current_user
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v2/users/current/sessions:
+    get:
+      summary: List current user's sessions
+      tags:
+        - current_user
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_size:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  prev_page_token:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Session"
+    delete:
+      summary: Delete all sessions of the current user other than the current session
+      tags:
+        - current_user
+      responses:
+        "204":
+          description: Success
+  /api/v2/sessions/current:
+    get:
+      summary: Get current session
+      tags:
+        - current_user
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+    delete:
+      summary: Delete current session
+      tags:
+        - current_user
+      responses:
+        "204":
+          description: Success
+  /oauth/token:
+    post:
+      summary: Exchange an authorization code for an access token
+      tags:
+        - oauth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+components:
+  schemas:
+    AuthnState:
+      type: object
+      properties:
+        state_token:
+          type: string
+        status:
+          type: string
+        password_method:
+          type: string
+        password_salt:
+          type: string
+        factors:
+          type: array
+          items:
+            type: string
+        idp_authorization_url:
+          type: string
+          format: uri
+        authorization_code:
+          type: string
+      required:
+        - state_token
+        - status
+    PasswordVerifier:
+      oneOf:
+        - $ref: '#/components/schemas/SPAKE2PlusVerifier'
+    SPAKE2PlusVerifier:
+      type: object
+      properties:
+        method:
+          type: string
+        salt:
+          type: string
+        w0:
+          type: string
+        l:
+          type: string
+      required:
+        - method
+        - salt
+        - w0
+        - l
+    TokenRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        grant_type:
+          type: string
+        code:
+          type: string
+        code_verifier:
+          type: string
+        refresh_token:
+          type: string
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+        id_token:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        preferred_username:
+          type: string
+        email:
+          type: string
+        email_verified:
+          type: boolean
+        phone:
+          type: string
+        phone_verified:
+          type: boolean
+        user_metadata:
+          type: object
+        app_metadata:
+          type: object
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        last_seen_at:
+          type: string
+          format: date-time
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_agent:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        last_seen_at:
+          type: string
+          format: date-time
+        last_seen_ip:
+          type: string
+        client_id:
+          type: string
+    IDP:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        service:
+          type: integer
+        oauth_user_id:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        last_used_at:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+    MFA:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        value:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        last_used_at:
+          type: string
+          format: date-time
+    Template:
+      type: object
+      properties:
+        name:
+          type: string
+        language:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+    TemplateString:
+      type: object
+      properties:
+        subject:
+          type: string
+        html:
+          type: string
+        text:
+          type: string
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

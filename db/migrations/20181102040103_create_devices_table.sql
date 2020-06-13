@@ -1,0 +1,19 @@
+-- migrate:up
+create table devices (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    public_key VARBINARY(255) NOT NULL UNIQUE KEY,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+create table devices_users (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    device_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    is_trusted TINYINT(1) NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- migrate:down
+drop table devices;
+drop table devices_users;

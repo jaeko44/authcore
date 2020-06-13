@@ -1,0 +1,273 @@
+syntax = "proto3";
+
+package authcore.authapi.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "authcore.io/authcore/pkg/api/authapi";
+
+message AuthenticationState {
+  enum ChallengeType {
+    PASSWORD = 0;
+    TIME_BASED_ONE_TIME_PASSWORD = 1;
+    UNIVERSAL_TWO_FACTOR = 2;
+    EMAIL_CODE = 3;
+    SMS_CODE = 4;
+    OAUTH = 5;
+    BACKUP_CODE = 6;
+  }
+  // The temporary token to identify the authentication request.
+  string temporary_token = 1;
+  // A boolean that indicates whether session is authenticated.
+  bool authenticated = 2;
+  // The ID of the authenticated user, or an empty string if the session is not authenticated.
+  string authenticated_user_id = 3;
+  // A list of ChallengeType that the client can attempt to complete authenticating as a user.
+  repeated ChallengeType challenges = 4;
+  // A new PasswordChallenge if PASSWORD is one of the `challenges`. Otherwise, it
+  // will be empty.
+  PasswordChallenge password_challenge = 5;
+  bytes password_salt = 7;
+  // The authorization token for the user, or an empty string if the session is not authenticated.
+  string authorization_token = 6;
+  // The URL that the widget should redirect to. Should not redirect if this field is left blank.
+  string redirect_url = 8;
+}
+
+message ResetPasswordAuthenticationState {
+  enum ChallengeType {
+    CONTACT_TOKEN = 0;
+  }
+  // The temporary token to identify the authentication request.
+  string temporary_token = 1;
+  // A boolean that indicates whether session is authenticated.
+  bool authenticated = 2;
+  // The ID of the authenticated user, or an empty string if the session is not authenticated.
+  string reset_password_user_id = 3;
+  // A list of ChallengeType that the client can attempt to complete authenticating as a user.
+  repeated ChallengeType challenges = 4;
+  // The reset password token for the user, or an empty string if the session is not authenticated.
+  string reset_password_token = 5;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string primary_email = 3;
+  google.protobuf.Timestamp primary_email_verified = 14;
+  string primary_phone = 4;
+  google.protobuf.Timestamp primary_phone_verified = 15;
+  string recovery_email = 18;
+  google.protobuf.Timestamp recovery_email_verified = 19;
+  string display_name = 5;
+  string user_info = 6;
+  google.protobuf.Timestamp last_seen_at = 20;
+  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp created_at = 8;
+  repeated Contact contacts = 9;
+  bool sms_authentication = 10;
+  bool locked = 11;
+  google.protobuf.Timestamp lock_expired_at = 12;
+  string lock_description = 13;
+  bool totp_authentication = 16;
+  bool password_authentication = 17;
+  string language = 21;
+}
+
+// An email or phone number registered by a user.
+message Contact {
+  enum Type {
+    EMAIL = 0;
+    PHONE = 1;
+  }
+  int64 id = 1;
+  Type type = 2;
+  string value = 3;
+  bool verified = 4;
+  bool primary = 5;
+}
+
+// An active session.
+message Session {
+  string id = 1;
+  string user_id = 2;
+  string device_id = 3;
+  string last_seen_ip = 4;
+  google.protobuf.Timestamp last_seen_at = 5;
+  string last_seen_location = 6;
+  string user_agent = 7;
+  google.protobuf.Timestamp expired_at = 8;
+  google.protobuf.Timestamp created_at = 9;
+  bool is_current = 10;
+}
+
+// An audit log entry.
+message AuditLogEntity {
+  enum Result {
+    UNKNOWN = 0;
+    FAIL = 1;
+    SUCCESS = 2;
+  }
+  string id = 1;
+  string username = 2;
+  string action = 3;
+  google.protobuf.Struct target = 4;
+  string session_id = 5;
+  string device = 6;
+  string ip = 7;
+  string description = 8;
+  Result result = 9;
+  bool is_external = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+
+message AuthorizationToken {
+  string authorization_token = 1;
+}
+
+// An access token.
+message AccessToken {
+  enum TokenType {
+    BEARER = 0;
+  }
+  // The access token issued by the server.
+  string access_token = 1;
+  // The new refresh token for obtaining access token later.
+  string refresh_token = 2;
+  // Type of the token.
+  TokenType token_type = 3;
+  // The lifetime in seconds of the access token.
+  int64 expires_in = 4;
+  // The ID token issued by the server.
+  string id_token = 5;
+}
+
+// A password verifier of a given username-password pair for the server to authenticate the user
+// via the SPAKE2+ protocol.
+message PasswordVerifier {
+  // The salt used to hash the password.
+  bytes salt = 1;
+  // The password verifier defined by the SPAKE2+ protocol.
+  bytes verifierW0 = 2;
+  // The password verifier defined by the SPAKE2+ protocol.
+  bytes verifierL = 3;
+}
+
+// The SPAKE2+ challenge from the server (incomingMessage from SPAKE2+).
+message PasswordChallenge {
+  string token = 1;
+  // The key-exchange response message of the server.
+  bytes message = 2;
+}
+
+// The SPAKE2+ response (comfirmation for SPAKE2+).
+message PasswordResponse {
+  string token = 1;
+  // The confirmation message of the client.
+  bytes confirmation = 2;
+}
+
+// An OAuth response.
+message OAuthResponse {
+  OAuthFactor.OAuthService service = 1;
+  string code = 2;
+}
+
+// An proof-of-work challenge.
+message ProofOfWorkChallenge {
+  string token = 1;
+  string challenge = 2;
+  string purpose = 3;
+  int64 difficulty = 4;
+}
+
+// An proof-of-work response.
+message ProofOfWorkResponse {
+  string token = 1;
+  string response = 2;
+}
+
+// Information for time-based one-time password second factor.
+message TOTPInfo {
+  string secret = 1;
+  string identifier = 2;
+}
+
+// Information for SMS second factor.
+message SMSInfo {
+  string phone_number = 1;
+}
+
+// Information for backup code.
+message BackupCodeInfo {}
+
+// Contact token response.
+message ContactToken {
+  string token = 1;
+}
+
+// Device registration.
+message DeviceRegistration {
+  string device_token = 1;
+  google.protobuf.Timestamp created_at = 2;
+}
+
+// An TOTP authenticator.
+message TOTPAuthenticator {
+  enum Status {
+    ACTIVE = 0;
+    INACTIVE = 1;
+  }
+  int64 id = 1;
+  string identifier = 2;
+  Status status = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp last_used_at = 5;
+}
+
+// An OAuth factor.
+message OAuthFactor {
+  enum OAuthService {
+    FACEBOOK = 0;
+    GOOGLE = 1;
+    APPLE = 2;
+    MATTERS = 3;
+    TWITTER = 4;
+  }
+  int64 id = 1;
+  int64 user_id = 2;
+  OAuthService service = 3;
+  string oauth_user_id = 4;
+  string metadata = 7;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp last_used_at = 6;
+}
+
+// An Second factor.
+message SecondFactor {
+  enum Type {
+    SMS = 0;
+    TOTP = 1;
+    BACKUP_CODE = 2;
+  }
+  message Content {
+    string phone_number = 1; // for SMS
+    string identifier = 2; // for TOTP
+    int64 used = 3; // for backup code
+    repeated string codes = 4; // for backup code
+  }
+  int64 id = 1;
+  int64 user_id = 2;
+  Type type = 3;
+  Content content = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp last_used_at = 6;
+}
+
+// An contact verification code.
+message ContactVerificationCode {
+  string contact_id = 1;
+  string code = 2;
+}

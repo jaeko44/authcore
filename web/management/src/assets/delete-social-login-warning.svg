@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
+  <g id="Group_2055" data-name="Group 2055" transform="translate(0 0)">
+    <g id="Group_2060" data-name="Group 2060">
+      <g id="Ellipse_1" data-name="Ellipse 1" fill="none" stroke="#e71b63" stroke-width="3">
+        <circle cx="31" cy="31" r="31" stroke="none"/>
+        <circle cx="31" cy="31" r="29.5" fill="none"/>
+      </g>
+      <text id="Account_verification" data-name="Account verification" transform="translate(19 14)" fill="#e71b63" font-size="40" font-family="Helvetica-Bold, Helvetica" font-weight="700"><tspan x="5.34" y="31">!</tspan></text>
+    </g>
+  </g>
+</svg>

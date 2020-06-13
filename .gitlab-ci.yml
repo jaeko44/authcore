@@ -1,0 +1,334 @@
+stages:
+  - test
+  - build
+  - package
+  - build images
+  - deploy
+  - audit
+
+variables:
+  MYSQL_ROOT_PASSWORD: testing
+  # Required by Kubernetes runner
+  DOCKER_HOST: tcp://localhost:2375
+
+  AUTHCORE_IMAGE_TAG: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}"
+
+  RELEASE_IMAGE: "gcr.io/enyk-releng/authcore"
+
+#######################################################################
+# Authcore                                                            #
+#######################################################################
+
+# Test
+
+test server:
+  stage: test
+  services:
+    - mysql:8.0
+  image: golang:1.13
+  script:
+    - scripts/test.sh
+    - scripts/lint.sh
+  coverage: '/total:\s+\(statements\)\s+\d+.\d+\%/'
+  variables:
+    TEST_DATABASE_URL: mysql://root:testing@localhost/authcore_test?parseTime=true
+  except:
+    - schedules
+
+test widgets:
+  stage: test
+  image: node:lts
+  before_script:
+    - cd web/widgets
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn lint
+    - yarn test
+  coverage: '/Lines\s*:\s*(\d*\.?\d+)%/'
+  artifacts:
+    when: always
+    paths:
+      - web/widgets/coverage
+      - web/widgets/mochawesome-report
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-widgets
+    paths:
+      - web/widgets/node_modules/
+  except:
+    - schedules
+
+test web:
+  stage: test
+  image: node:lts
+  before_script:
+    - cd web/management
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn lint
+    - yarn test
+  coverage: '/Lines\s*:\s*(\d*\.?\d+)%/'
+  artifacts:
+    when: always
+    paths:
+      - web/coverage
+      - web/mochawesome-report
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-web
+    paths:
+      - web/management/node_modules/
+  except:
+    - schedules
+
+# Build
+
+build server:
+  stage: build
+  image: golang:1.13
+  script:
+    - scripts/build.sh
+  artifacts:
+    paths:
+      - build
+  except:
+    - schedules
+  variables:
+    GOPATH: ${CI_PROJECT_DIR}/go
+
+build widgets:
+  stage: build
+  image: node:lts
+  before_script:
+    - cd web/widgets
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - web/dist/widgets
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-widgets
+    paths:
+      - web/widgets/node_modules/
+  except:
+    - schedules
+
+build web:
+  stage: build
+  image: node:lts
+  before_script:
+    - cd web/management
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - web/dist/web
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-web
+    paths:
+      - web/management/node_modules/
+  except:
+    - schedules
+
+build docs:
+  stage: build
+  image: node:lts
+  before_script:
+    - cd web/docs
+    - yarn install
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - web/dist/docs
+  except:
+    - schedules
+
+# Package
+
+package:
+  stage: package
+  image: golang:1.13
+  script:
+    - scripts/package.sh
+  artifacts:
+    paths:
+      - dist
+  only:
+    - master
+    - /^release-.*$/
+    - tags
+  except:
+    - schedules
+
+# Build images
+
+build images:
+  stage: build images
+  services:
+    - docker:dind
+  image: docker:latest
+  dependencies:
+    - package
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  script:
+    - docker build --build-arg COMMIT_REF_NAME="$CI_COMMIT_REF_NAME" --pull -t "$AUTHCORE_IMAGE_TAG" -f deployments/dockerfiles/Dockerfile dist
+    - docker push "$AUTHCORE_IMAGE_TAG"
+  only:
+    - master
+    - /^release-.*$/
+    - tags
+  except:
+    - schedules
+
+# Deploy
+
+release images:
+  stage: deploy
+  services:
+    - docker:dind
+  image: docker:latest
+  dependencies: []
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - cat ${CI_DOCKER_KEY_FILE} | docker login -u _json_key --password-stdin gcr.io
+  script:
+    - docker pull ${AUTHCORE_IMAGE_TAG}
+    - docker tag ${AUTHCORE_IMAGE_TAG} ${RELEASE_IMAGE}:${CI_COMMIT_REF_NAME}
+    - docker push ${RELEASE_IMAGE}
+  only:
+    - /^release-.*$/
+    - tags
+
+deploy staging:
+  stage: deploy
+  image: google/cloud-sdk
+  before_script:
+    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
+    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}" --tiller-namespace "${KUBE_NAMESPACE}"
+    - linux-amd64/helm dependency update deployments/charts/authcore
+  script:
+    - linux-amd64/helm upgrade --tiller-namespace="${KUBE_NAMESPACE}" --namespace="${KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic staging deployments/charts/authcore
+  dependencies: []
+  environment:
+    name: staging
+    url: https://authcore-staging.blocksq.com/
+  only:
+    - master
+  except:
+    - schedules
+
+# Daily deployment for Alpha and Likecoin instance
+
+deploy alpha:
+  stage: deploy
+  image: google/cloud-sdk
+  before_script:
+    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
+    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}"
+    - linux-amd64/helm dependency update deployments/charts/authcore
+  script:
+    - linux-amd64/helm upgrade --namespace="${DEPLOY_KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic authcore-alpha deployments/charts/authcore
+  dependencies: []
+  environment:
+    name: alpha
+    url: https://alpha.authcore.io/
+  variables:
+    DEPLOY_KUBE_NAMESPACE: authcore-alpha
+  only:
+    - schedules
+
+deploy like-co:
+  stage: deploy
+  image: google/cloud-sdk
+  before_script:
+    - curl -s https://get.helm.sh/helm-v2.15.1-linux-amd64.tar.gz | tar xzf -
+    - linux-amd64/helm init -c --service-account "${KUBE_SERVICE_ACCOUNT}"
+    - linux-amd64/helm dependency update deployments/charts/authcore
+  script:
+    - linux-amd64/helm upgrade --namespace="${DEPLOY_KUBE_NAMESPACE}" --set image.tag="${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}" --reuse-values --atomic like-authcore deployments/charts/authcore
+  dependencies: []
+  environment:
+    name: like-co
+    url: https://likecoin-integration-test.authcore.io/
+  variables:
+    DEPLOY_KUBE_NAMESPACE: like-authcore
+  only:
+    - schedules
+
+pages:
+  stage: deploy
+  image: node:lts
+  script:
+    - scripts/docs.sh
+    - mv build/docs public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+  except:
+    - schedules
+
+# End-to-end test
+
+# end-to-end test:
+#   stage: end-to-end test
+#   services:
+#     - docker:dind
+#   image: docker:latest
+#   script:
+#     - docker run --rm -e CYPRESS_AUTHCORE_WEB_HOST --network host -v `pwd`/test/end-to-end:/src -w /src cypress/base:10 bash -c "yarn install && yarn cypress run --spec \"cypress/integration/general/**/*\""
+#   variables:
+#     CYPRESS_AUTHCORE_WEB_HOST: https://authcore-staging.blocksq.com
+#   artifacts:
+#     when: always
+#     paths:
+#       - tests/end-to-end/cypress/screenshots
+#       - tests/end-to-end/cypress/videos
+#   dependencies: []
+#   only:
+#     - master
+#   except:
+#     - schedules
+
+# Audit
+
+audit widgets:
+  stage: audit
+  image: node:lts
+  before_script:
+    - cd widgets
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install --network-concurrency 1
+  script:
+    - bash audit.sh
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-widgets
+    paths:
+      - web/widgets/node_modules/
+  allow_failure: true
+  only:
+    - schedules
+
+audit web:
+  stage: audit
+  image: node:lts
+  before_script:
+    - cd web
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf https://gitlab.com/
+    - yarn install
+  script:
+    - bash audit.sh
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-web
+    paths:
+      - web/management/node_modules/
+  allow_failure: true
+  only:
+    - schedules

@@ -1,0 +1,7 @@
+Hi,
+
+Please verify your email address by entering this verification code: {code}
+
+Protected by Authcore
+
+&copy; 2020 {application_name}. All rights reserved.

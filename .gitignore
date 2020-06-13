@@ -1,0 +1,26 @@
+.DS_Store
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+cover.out.tmp
+cover.html
+
+# Dep's dependences
+/vendor/
+
+# Build products direcotry
+/build/
+/dist/
+
+/web/authcore-js
+/configs/authcore_secrets.yaml

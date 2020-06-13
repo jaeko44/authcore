@@ -1,0 +1,533 @@
+$btn-disabled-opacity: 1;
+$input-group-addon-bg: #fff;
+$sizes: (
+  35: 35%
+);
+
+$profile-icon-size: 30px;
+$social-icon-size: 48px;
+$social-icon-rounded-size: 40px;
+
+$input-padding-extra-right: 1.5rem;
+
+$grid-gutter-width: 70px !default;
+
+$facebook-colour: #3b5998;
+$twitter-colour: #55acee;
+$apple-colour: #000000;
+$matters-colour: #f1faf7;
+
+$border-color: #dfdfdf;
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+@import '~bootstrap-vue/src/index';
+@import './css/_utilities';
+
+// Override the original style from bootstrap
+.list-group-item-action {
+    color: black;
+    &:hover {
+        color: black;
+    }
+    &:focus {
+        color: black;
+    }
+}
+
+// Override the original style from bootstrap
+.btn-block {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+// Override the original style from bootstrap
+.custom-checkbox {
+    ~.invalid-feedback {
+        font-size: inherit;
+    }
+}
+
+// Override the original style from bootstrap
+.alert-dismissible {
+    &.text-center {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .close {
+        font-weight: 400;
+        padding: 0.6rem 1.25rem;
+    }
+}
+
+// Inverted padding setting according to the max-width
+@media (max-width: 577px) {
+    .ip-0 {
+        padding: 0 !important;
+    }
+    .ip-1 {
+        padding: ($spacer * .25) !important;
+    }
+    .ip-2 {
+        padding: ($spacer * .5) !important;
+    }
+}
+
+.font-size-inherit {
+    font-size: inherit;
+}
+
+.authcore-name {
+    font-family: "Muli";
+    font-weight: 900;
+}
+.authcore-logo {
+    width: 16px;
+    height: 16px;
+}
+
+.small-logo-size {
+    width: 32px;
+    height: 32px;
+}
+
+.large-logo-size {
+    width: 64px;
+    height: 64px;
+}
+
+.social-logo-list-wording-margin {
+    margin-left: $social-icon-size;
+}
+
+.social-logo-list-style {
+    display: inline-block;
+    width: $social-icon-size;
+    height: $social-icon-size;
+    color: white;
+
+    position: absolute;
+    left: 0;
+    margin-left: 4px;
+
+    &-facebook {
+        color: $facebook-colour;
+    }
+    &-twitter {
+        color: $twitter-colour;
+    }
+    &-apple {
+        color: $apple-colour;
+    }
+    &-matters {
+        color: $matters-colour;
+    }
+}
+
+.social-logo {
+    display: inline-block;
+    width: $social-icon-size;
+    height: $social-icon-size;
+    color: white;
+    &:hover {
+        color: white;
+        text-decoration: none;
+    }
+
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+
+    &-rounded {
+      display: inline-block;
+      color: white;
+      &:hover {
+        color: white;
+        text-decoration: none;
+      }
+      width: $social-icon-rounded-size;
+      height: $social-icon-rounded-size;
+      border-width: 1px;
+      border-style: solid;
+      border-radius: $social-icon-rounded-size / 2;
+    }
+
+    &-google {
+        border-color: $bsq-grey-light;
+
+        &:hover {
+            background-color: darken(white, 10);
+            border-color: darken(white, 10);
+        }
+    }
+    &-facebook {
+        background-color: $facebook-colour;
+        border-color: $facebook-colour;
+
+        &:hover {
+            background-color: darken($facebook-colour, 10);
+            border-color: darken($facebook-colour, 10);
+        }
+    }
+    &-twitter {
+        background-color: $twitter-colour;
+        border-color: $twitter-colour;
+
+        &:hover {
+            background-color: darken($twitter-colour, 10);
+            border-color: darken($twitter-colour, 10);
+        }
+    }
+    &-apple {
+        background-color: $apple-colour;
+        border-color: $apple-colour;
+
+        &:hover {
+            background-color: lighten($apple-colour, 10);
+            border-color: lighten($apple-colour, 10);
+        }
+    }
+    &-matters {
+        background-color: $matters-colour;
+        border-color: $matters-colour;
+
+        &:hover {
+            background-color: darken($matters-colour, 10);
+            border-color: darken($matters-colour, 10);
+        }
+    }
+}
+
+
+/* adjust padding-left for the column as the back button click zone occupied the other part */
+.col-auto-with-back-button {
+    padding-left: $grid-gutter-width / 2 - 8px;
+    padding-right: $grid-gutter-width / 2 - 27px;
+}
+
+.text-grey-medium {
+    color: $bsq-grey-medium !important;
+}
+
+.text-grey-dark {
+    color: $bsq-grey-dark !important;
+}
+
+.text-grey {
+    color: $bsq-text-grey !important;
+}
+
+// Use for variant="normal" for button
+// Provide grey style for button
+.btn.btn-normal {
+    color: #222222;
+    background-color: $white;
+    border-color: $bsq-border-grey;
+
+    &:hover {
+        color: #222222;
+        background-color: $bsq-grey-light;
+    }
+
+    &:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem $bsq-grey-light;
+    }
+}
+
+.btn.btn-primary:disabled {
+  background-color: #cbccce;
+  border-color: #cbccce;
+}
+
+.input-group {
+  .input-group-prepend + input.form-control {
+    border-left: 0;
+  }
+  &.input-group-invalid {
+    .input-group-prepend > * {
+      border-color: $form-feedback-invalid-color;
+    }
+    .input-group-append > * {
+      border-color: $form-feedback-invalid-color;
+    }
+    .invalid-feedback {
+      opacity: 1;
+    }
+  }
+  &.input-group-disabled {
+    .input-group-prepend > * {
+      background-color: $gray-200;
+    }
+    .input-group-append > * {
+      background-color: $gray-200;
+    }
+  }
+  .invalid-feedback {
+    display: block;
+    opacity: 0;
+    text-align: right;
+  }
+  &.input-group-with-feedback {
+    :nth-last-child(2) {
+      @include border-right-radius($input-border-radius);
+      :last-child {
+        @include border-right-radius($input-border-radius);
+      }
+    }
+  }
+
+  .input-group-depressed-addon {
+    background-color: #fff;
+    border-color: #cbccce;
+  }
+  .form-control + .input-group-append > .input-group-depressed-addon {
+    border-left: 0;
+  }
+}
+
+.absolute-center-vertically {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.flex-center-vertically {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+// Customized icons: <div class="icon icon-eye-off" />
+div.icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  &.icon-eye-on {
+    background-image: url("./assets/eye-on.svg");
+  }
+  &.icon-eye-off {
+    background-image: url("./assets/eye-off.svg");
+  }
+}
+
+img.profile-icon {
+    width: $profile-icon-size;
+    height: $profile-icon-size;
+}
+
+div#protected_by {
+    opacity: 0.3;
+}
+
+.deep-transparency {
+    opacity: 0.6;
+}
+
+.shallow-transparency {
+    opacity: 0.4;
+}
+
+/* Hide the spin button for pin input, ref: https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box */
+div.hide-spin-button {
+    & > input::-webkit-outer-spin-button,
+    & > input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    & > input[type=number] {
+        -moz-appearance: textfield; /* Firefox */
+    }
+}
+
+.prompt-from-bottom-leave-active {
+    opacity: 0;
+    position: absolute;
+}
+
+.prompt-from-bottom-enter {
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.prompt-from-bottom-enter-active {
+    transition: all .5s ease;
+}
+
+.prompt-from-bottom-leave-to {
+    opacity: 0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition-duration: 0.4s;
+    transition-property: height, opacity, transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+
+.slide-left-enter,
+.slide-right-leave-active {
+    opacity: 0;
+    transform: translate(2em, 0);
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+    opacity: 0;
+    transform: translate(-2em, 0);
+}
+
+// fade-slide-left transition performs fade first to hide element and slide left to show element
+.fade-slide-left-enter {
+    transform: translate(2em, 0);
+    opacity: 0;
+}
+.fade-slide-left-enter-active {
+    transition-duration: 0.4s;
+    transition-property: opacity transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+.fade-slide-left-enter-to {
+}
+
+.fade-slide-left-leave {
+    opacity: 1;
+}
+.fade-slide-left-leave-active {
+    transition-duration: 0.4s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+.fade-slide-left-leave-to {
+    opacity: 0;
+}
+
+// slide-left-fade transition performs slide left first to hide element and fade to show element
+.slide-left-fade-enter {
+    opacity: 0;
+}
+.slide-left-fade-enter-active {
+    transition-duration: 0.8s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+.slide-left-fade-enter-to {
+    opacity: 1;
+}
+
+.slide-left-fade-leave {
+}
+.slide-left-fade-leave-active {
+    transform: translate(-2em, 0);
+    opacity: 0;
+    transition-duration: 0.4s;
+    transition-property: opacity transform;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+    overflow: hidden;
+}
+.slide-left-fade-leave-to {
+}
+
+.fadeIn-enter {
+    opacity: 0;
+}
+
+.fadeIn-enter-active {
+    transition-duration: 0.4s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fadeIn-leave {
+    opacity: 1;
+}
+
+.fadeIn-leave-active {
+    animation-play-state: paused !important;
+    transition-duration: 0.4s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fadeIn-leave-to {
+    opacity: 0;
+}
+
+.generic-list-item {
+    border-top: 1px solid $border-color;
+    border-left: 0;
+    border-right: 0;
+    // Padding from grid gutter width to match the alignment of design
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: $grid-gutter-width / 2;
+    padding-right: $grid-gutter-width / 2;
+
+    &:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    &:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: 1px solid $border-color;
+    }
+
+    .hover-remove {
+        @media only screen and (min-width: 421px) {
+            visibility: hidden;
+        }
+    }
+
+    &:hover {
+        border-bottom: 1px solid $border-color;
+        .hover-remove {
+            visibility: visible;
+        }
+    }
+}
+
+.tick {
+    position: relative;
+    top: -58px;
+    opacity: 0;
+    transition: opacity 0.7s ease-in;
+}
+
+.tick-shown {
+    opacity: 1;
+}
+
+.center-separator {
+    display: flex;
+    line-height: 1em;
+    color: $bsq-grey-dark;
+}
+
+.center-separator::before, .center-separator::after {
+    content: '';
+    display: inline-block;
+    flex-grow: 1;
+    margin-top: 0.5em;
+    background: $bsq-grey-medium;
+    height: 1px;
+}
+
+.center-separator::before {
+    margin-right: 20px;
+}
+
+.center-separator::after {
+    margin-left: 20px;
+}

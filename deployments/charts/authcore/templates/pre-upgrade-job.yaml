@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "authcore.fullname" . }}-migration
+  labels:
+    helm.sh/chart: {{ include "authcore.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: {{ include "authcore.name" . }}
+  annotations:
+    "helm.sh/hook": post-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: {{ include "authcore.fullname" . }}-migration
+      labels:
+        app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+        app.kubernetes.io/instance: {{.Release.Name | quote }}
+        helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: {{ .Chart.Name }}-migration
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/app/authcorectl", "migration", "up"]
+          env:
+            - name: AUTHCORE_CONFIG
+              value: conf/authcore
+{{- if (include "authcore.mysql.databaseURL" .) }}
+            - name: AUTHCORE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "authcore.mysql.databaseURL" . }}
+                  key: database_url
+{{- end }}
+          volumeMounts:
+            - mountPath: /app/conf/
+              name: config
+      volumes:
+      - name: config
+        projected:
+          sources:
+            - configMap:
+                name: {{ include "authcore.name" . }}-configuration
+                items:
+                  - key: authcore.yaml
+                    path: authcore.yaml
+{{- if .Values.config }}
+            - secret:
+                name: {{ include "authcore.name" . }}-secret
+                items:
+                  - key: secret.yaml
+                    path: secret.yaml
+{{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

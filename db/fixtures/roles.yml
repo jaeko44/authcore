@@ -1,0 +1,9 @@
+- id: 1
+  name: authcore.admin
+  is_system_role: true
+- id: 2
+  name: authcore.editor
+  is_system_role: true
+- id: 3
+  name: snowdrop.admin
+  is_system_role: false

@@ -1,0 +1,12 @@
+// Provide font size class for different font size need
+// Comment shows corrsponding size when 1rem = 16px
+$font-size-breakpoints: (
+    '0\\.875rem': 0.875rem, // 14px
+    '1rem': 1rem            // 16px
+);
+
+@each $name, $size in $font-size-breakpoints {
+    .font\:#{$name} {
+        font-size: #{$size};
+    }
+}

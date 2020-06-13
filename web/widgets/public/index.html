@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <link id="favicon" rel="icon" href="<%= BASE_URL %>favicon.png">
+    <title>Authcore Widgets</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:900&text=Authcore">
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but authcore-widgets doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <script type="text/javascript">
+      __authcore_settings__ = <!--#authcore_settings -->
+    </script>
+    <script src="https://browser.sentry-cdn.com/5.14.1/bundle.es6.min.js" integrity="sha384-+bt7fl/lRpb3z8/LbuV/Do446hVI+qoD1NP1pohVnUcEh4nyYSPqDnx11y7GU14J" crossorigin="anonymous"></script>
+    <script src="https://browser.sentry-cdn.com/5.14.1/vue.min.js" crossorigin="anonymous"></script>
+    <% if (NODE_ENV === 'production') { %>
+      <script>
+      Sentry.init({
+        dsn: 'https://46ec763339ab4dbababb387d14a99e56@sentry.io/5094449',
+        integrations: [new Sentry.Integrations.Vue({attachProps: true, logErrors: true})],
+      })
+      </script>
+    <% } %>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

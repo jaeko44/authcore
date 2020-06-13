@@ -1,0 +1,9 @@
+{
+  "eslint.workingDirectories": [
+    "./web/widgets",
+    "./web/management"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
