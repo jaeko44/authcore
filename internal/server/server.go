@@ -44,6 +44,10 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+var (
+	buildVersion string = "develop"
+)
+
 // Server represents the global context of Authcore server.
 type Server struct {
 	rpc              *grpc.Server
@@ -86,8 +90,14 @@ func NewServer() *Server {
 	return s
 }
 
+// BuildVersion returns the version set at build time.
+func (s *Server) BuildVersion() string {
+	return buildVersion
+}
+
 // Start the gRPC server
 func (s *Server) Start() {
+	log.Infof("Authcore version: %v", s.BuildVersion())
 	if viper.GetBool("apiv1_enabled") {
 		log.Info("API v1 enabled")
 		go s.startGRPCServer()
