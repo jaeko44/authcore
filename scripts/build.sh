@@ -10,8 +10,15 @@ then
     exit 255
 fi
 
+VERSION=$(git describe --always --match 'v*')
+
+if [ $VERSION != v* ]
+then
+    VERSION=0.1.0+git.$VERSION
+fi
+
 export GOBIN="$BASEDIR"/build
 
 rm -fr "$GOBIN"/*
 cd "$BASEDIR"
-go install authcore.io/authcore/cmd/...
+go install -ldflags "-X authcore.io/authcore/internal/server.buildVersion=${VERSION}" authcore.io/authcore/cmd/...
