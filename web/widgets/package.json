@@ -14,7 +14,7 @@
     "authcore-js": "https://gitlab.com/blocksq/authcore-js.git",
     "bootstrap-vue": "git+https://gitlab+deploy-token-87852:sNtfEQDMxcWx6bRszzwa@gitlab.com/blocksq/bootstrap-vue.git",
     "browserify-sign": "4.2.0",
-    "elliptic": "^6.5.0",
+    "elliptic": "^6.5.3",
     "es6-tween": "^5.5.10",
     "libphonenumber-js": "^1.7.24",
     "lodash-es": "^4.17.15",
