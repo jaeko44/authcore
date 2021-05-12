@@ -13,7 +13,7 @@
     "authcore-js": "https://gitlab.com/blocksq/authcore-js.git",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "git+https://gitlab+deploy-token-87852:sNtfEQDMxcWx6bRszzwa@gitlab.com/blocksq/bootstrap-vue.git",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "htmlhint": "^0.11.0",
     "jquery": "^3.3.1",
     "js-beautify": "^1.9.1",
